@@ -112,6 +112,12 @@ npm run preview               # Preview build
 
 # Check
 npm run check                 # TypeScript + ESLint + Prettier
+
+# Deploy (Git Worktree - NOU!)
+./deploy.sh "mesaj"           # Din template (wrapper)
+# SAU din siteplus/ root:
+# ./deploy-all.sh --template DESIGN-SYSTEM "mesaj"
+# ./deploy-all.sh "mesaj"     # Toate 8 template-uri
 ```
 
 ---
@@ -148,6 +154,18 @@ npm run check                 # TypeScript + ESLint + Prettier
 
 ---
 
+## Deploy Workflow (Git Worktree)
+
+```
+DESIGN-SYSTEM-ASTRO/    (main branch - sursa)
+DESIGN-SYSTEM-DIST/     (dist branch - worktree)
+
+Ambele coexista simultan - ZERO branch switching!
+```
+
+---
+
 _Document creat: 2025-12-28_
+_Actualizat: 2025-12-29 (Git Worktree Workflow)_
 _Proiect: DESIGN-SYSTEM-ASTRO (Pilot pentru SitePlus Design System)_
 _Bazat pe: AGENTIE_IMOBILIARE + Tailwind CSS 4.0_
