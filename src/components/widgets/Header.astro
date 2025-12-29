@@ -65,7 +65,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
   data-aw-sticky-header
   data-header-variant={variant}
 >
-  <div class="header-bg absolute inset-0 bg-white shadow-sm transition-all duration-300"></div>
+  <div class="header-bg absolute inset-0 bg-white dark:bg-gray-900 shadow-sm transition-all duration-300"></div>
 
   <div class="relative mx-auto max-w-7xl px-4 md:px-6">
     <div class="flex items-center justify-between py-4">
@@ -75,7 +75,9 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           <Icon name="tabler:home" class="h-6 w-6 text-white" />
         </div>
         <div>
-          <span class="header-logo-text block text-2xl font-bold text-gray-900 transition-colors">Casa Perfecta</span>
+          <span class="header-logo-text block text-2xl font-bold text-gray-900 dark:text-white transition-colors"
+            >Casa Perfecta</span
+          >
         </div>
       </a>
 
@@ -89,17 +91,17 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                   <>
                     <button
                       type="button"
-                      class="header-nav-link flex items-center gap-1 px-4 py-2 text-gray-700 hover:text-primary font-medium transition-colors"
+                      class="header-nav-link flex items-center gap-1 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary font-medium transition-colors"
                     >
                       {text}
                       <Icon name="tabler:chevron-down" class="h-4 w-4 transition-transform group-hover:rotate-180" />
                     </button>
-                    <ul class="dropdown-menu invisible absolute left-0 top-full z-50 min-w-[220px] rounded-lg bg-white py-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                    <ul class="dropdown-menu invisible absolute left-0 top-full z-50 min-w-[220px] rounded-lg bg-white dark:bg-gray-800 py-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100 border border-transparent dark:border-gray-700">
                       {subLinks.map(({ text: text2, href: href2 }) => (
                         <li>
                           <a
                             class:list={[
-                              'block px-5 py-2.5 text-gray-700 transition-colors hover:bg-primary/10 hover:text-primary',
+                              'block px-5 py-2.5 text-gray-700 dark:text-gray-300 transition-colors hover:bg-primary/10 hover:text-primary',
                               { 'bg-primary/10 text-primary': href2 === currentPath },
                             ]}
                             href={href2}
@@ -113,7 +115,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                 ) : (
                   <a
                     class:list={[
-                      'header-nav-link px-4 py-2 text-gray-700 hover:text-primary font-medium transition-colors',
+                      'header-nav-link px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary font-medium transition-colors',
                       { 'text-primary': href === currentPath },
                     ]}
                     href={href}
@@ -146,30 +148,32 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       <!-- Mobile Toggle -->
       <div class="flex items-center gap-2 lg:hidden">
         {showToggleTheme && <ToggleTheme iconClass="w-5 h-5 text-gray-700 dark:text-gray-300" />}
-        <ToggleMenu iconClass="w-6 h-6 header-toggle-icon text-gray-700" />
+        <ToggleMenu iconClass="w-6 h-6 header-toggle-icon text-gray-700 dark:text-gray-300" />
       </div>
     </div>
 
     <!-- Mobile Navigation -->
     <nav class="hidden w-full lg:hidden" aria-label="Mobile navigation" id="mobile-menu">
-      <div class="rounded-xl bg-white shadow-xl p-4 mt-2 mb-4">
+      <div
+        class="rounded-xl bg-white dark:bg-gray-800 shadow-xl p-4 mt-2 mb-4 border border-transparent dark:border-gray-700"
+      >
         <ul class="flex flex-col">
           {
             links.map(({ text, href, links: subLinks }) => (
-              <li class="border-b border-gray-100 last:border-0">
+              <li class="border-b border-gray-100 dark:border-gray-700 last:border-0">
                 {subLinks?.length ? (
                   <div class="mobile-dropdown">
                     <button
                       type="button"
-                      class="flex w-full items-center justify-between px-4 py-3 text-gray-700 hover:text-primary font-medium"
+                      class="flex w-full items-center justify-between px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary font-medium"
                     >
                       {text}
                       <Icon name="tabler:chevron-down" class="h-5 w-5 transition-transform" />
                     </button>
-                    <ul class="hidden bg-gray-50 rounded-lg mx-2 mb-2">
+                    <ul class="hidden bg-gray-50 dark:bg-gray-700 rounded-lg mx-2 mb-2">
                       {subLinks.map(({ text: text2, href: href2 }) => (
                         <li>
-                          <a class="block px-4 py-2.5 text-gray-600 hover:text-primary" href={href2}>
+                          <a class="block px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:text-primary" href={href2}>
                             {text2}
                           </a>
                         </li>
@@ -179,7 +183,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                 ) : (
                   <a
                     class:list={[
-                      'block px-4 py-3 text-gray-700 hover:text-primary font-medium',
+                      'block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary font-medium',
                       { 'text-primary': href === currentPath },
                     ]}
                     href={href}
@@ -195,7 +199,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         <!-- Mobile CTA -->
         {
           actions?.length > 0 && (
-            <div class="mt-4 pt-4 border-t border-gray-100">
+            <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
               <a
                 href={actions[0].href}
                 class="flex items-center justify-center gap-2 w-full rounded-lg bg-primary py-3 font-semibold text-white"
