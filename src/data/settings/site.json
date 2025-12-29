@@ -1,0 +1,32 @@
+{
+  "siteName": "Casa Perfecta - Agentie Imobiliara",
+  "tagline": "Gasim casa visurilor tale",
+  "description": "Agentie imobiliara cu peste 15 ani experienta in Bucuresti. Apartamente, case, terenuri - vanzare si inchiriere. Echipa de profesionisti dedicati gasirii locuintei perfecte pentru tine.",
+  "agencyName": "Casa Perfecta",
+  "agencyTitle": "Agentie Imobiliara Autorizata ANEVAR",
+  "agencyBio": "Casa Perfecta este o agentie imobiliara cu traditie in Bucuresti, infiintata in 2009. Cu o echipa de peste 20 de agenti certificati si o baza de date de peste 500 de proprietati, suntem partenerul tau de incredere in gasirea locuintei perfecte.",
+  "agencyImage": "~/assets/images/agentie-imobiliara/logo-casa-perfecta.jpg",
+  "contact": {
+    "phone": "0722100200",
+    "email": "contact@casaperfecta.ro",
+    "whatsapp": "40722100200"
+  },
+  "address": {
+    "street": "Bulevardul Unirii Nr. 45",
+    "city": "Bucuresti",
+    "county": "Sector 3",
+    "postalCode": "030167"
+  },
+  "schedule": {
+    "weekdays": "09:00 - 18:00",
+    "saturday": "10:00 - 14:00",
+    "sunday": "Inchis"
+  },
+  "socialMedia": {
+    "facebook": "https://facebook.com/casaperfecta.ro",
+    "instagram": "https://instagram.com/casaperfecta.ro",
+    "youtube": "",
+    "tiktok": ""
+  },
+  "googleMapsEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2849.2!2d26.1172!3d44.4268!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBulevardul%20Unirii%2045%2C%20Bucure%C8%99ti!5e0!3m2!1sro!2sro"
+}

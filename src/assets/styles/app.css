@@ -1,0 +1,786 @@
+/*
+ * ============================================
+ * TAILWIND CSS 4.0 - DESIGN SYSTEM
+ * CSS-first configuration following TW4 patterns
+ * ============================================
+ */
+
+@import 'tailwindcss';
+
+/* Typography plugin - TW4 compatible */
+@plugin "@tailwindcss/typography";
+
+/* ============================================
+   DESIGN TOKENS - @theme directive
+   All colors, fonts, spacing defined here
+   ============================================ */
+@theme {
+  /* ============================================
+     DESIGN SYSTEM TOKENS - SitePlus v1.0
+     ============================================
+
+     USAGE CONSTRAINTS:
+     - Colors: ONLY use --color-* variables, NEVER hardcode hex/rgb
+     - Spacing: Use Tailwind scale (p-4, m-6) or --spacing-* for sections
+     - Radius: Use --radius-* for consistency
+     - Shadows: Use --shadow-* variables
+     - Fonts: Only --font-sans, --font-serif, --font-heading
+
+     ============================================ */
+
+  /* ============================================
+     1. COLORS - Brand Palette
+     ============================================ */
+  /* Primary - Orange (CTA, emphasis) */
+  --color-primary: rgb(243 85 37);
+  --color-primary-light: rgb(255 120 75);
+  --color-primary-dark: rgb(210 65 25);
+
+  /* Secondary - Blue (links, info) */
+  --color-secondary: rgb(0 113 248);
+  --color-secondary-light: rgb(51 143 255);
+  --color-secondary-dark: rgb(0 85 200);
+
+  /* Accent - Red (highlights) */
+  --color-accent: rgb(238 98 107);
+
+  /* Semantic Colors */
+  --color-success: rgb(34 197 94);
+  --color-warning: rgb(234 179 8);
+  --color-error: rgb(239 68 68);
+  --color-info: rgb(59 130 246);
+  --color-neutral: rgb(107 114 128);
+
+  /* Text Colors */
+  --color-text-heading: rgb(17 24 39);
+  --color-text-default: rgb(31 41 55);
+  --color-text-muted: rgb(107 114 128);
+  --color-text-light: rgb(243 244 246);
+  --color-text-inverse: rgb(255 255 255);
+
+  /* Backgrounds */
+  --color-bg-page: rgb(255 255 255);
+  --color-bg-page-dark: rgb(17 24 39);
+  --color-bg-subtle: rgb(249 250 251);
+  --color-bg-muted: rgb(243 244 246);
+
+  /* Borders */
+  --color-border: rgb(229 231 235);
+  --color-border-dark: rgb(55 65 81);
+
+  /* ============================================
+     2. TYPOGRAPHY
+     ============================================ */
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Montserrat Variable', 'Montserrat', ui-serif, Georgia, serif;
+  --font-heading: 'Montserrat Variable', 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+
+  /* Font Sizes (following TW scale) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ============================================
+     3. SPACING SCALE
+     ============================================ */
+  /* Section spacing (vertical) */
+  --spacing-section-sm: 3rem;
+  --spacing-section: 5rem;
+  --spacing-section-lg: 6rem;
+  --spacing-section-xl: 8rem;
+
+  /* Container padding */
+  --spacing-container: 1rem;
+  --spacing-container-md: 1.5rem;
+  --spacing-container-lg: 2rem;
+
+  /* ============================================
+     4. BORDER RADIUS
+     ============================================ */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ============================================
+     5. SHADOWS
+     ============================================ */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-primary: 0 4px 14px 0 rgba(243, 85, 37, 0.35);
+  --shadow-secondary: 0 4px 14px 0 rgba(0, 113, 248, 0.35);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+  /* ============================================
+     6. TRANSITIONS & ANIMATIONS
+     ============================================ */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  --animate-fade: fadeInUp 1s both;
+  --animate-slide-left: slideInLeft 0.8s ease-out both;
+  --animate-slide-right: slideInRight 0.8s ease-out both;
+  --animate-scale-up: scaleUp 0.6s ease-out both;
+  --animate-blur-in: blurIn 0.8s ease-out both;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-pulse-gentle: pulseGentle 2s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-glow-pulse: glowPulse 2s ease-in-out infinite;
+
+  /* ============================================
+     7. GRADIENTS
+     ============================================ */
+  --gradient-primary: linear-gradient(135deg, rgb(243 85 37) 0%, rgb(210 65 25) 100%);
+  --gradient-secondary: linear-gradient(135deg, rgb(0 113 248) 0%, rgb(0 85 200) 100%);
+  --gradient-hero: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+  --gradient-card-hover: linear-gradient(135deg, rgba(243, 85, 37, 0.05) 0%, rgba(0, 113, 248, 0.05) 100%);
+  --gradient-subtle: linear-gradient(180deg, rgb(249 250 251) 0%, rgb(255 255 255) 100%);
+
+  /* ============================================
+     8. Z-INDEX SCALE
+     ============================================ */
+  --z-dropdown: 50;
+  --z-sticky: 100;
+  --z-fixed: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-tooltip: 500;
+}
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-3rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(3rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blurIn {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseGentle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(243, 85, 37, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(243, 85, 37, 0.6);
+  }
+}
+
+/* ============================================
+   CUSTOM UTILITIES
+   ============================================ */
+@utility bg-page {
+  background-color: var(--color-bg-page);
+}
+
+@utility bg-dark {
+  background-color: var(--color-bg-page-dark);
+}
+
+@utility text-page {
+  color: var(--color-text-default);
+}
+
+@utility text-muted {
+  color: var(--color-text-muted);
+}
+
+@utility text-heading {
+  color: var(--color-text-heading);
+}
+
+/* ============================================
+   CUSTOM COMPONENTS - Pure CSS (TW4 compatible)
+   ============================================ */
+
+/* Base button - rounded-full with smooth transitions */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(156 163 175);
+  background-color: transparent;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.375;
+  padding: 0.875rem 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  color: var(--color-text-default);
+  --tw-ring-color: rgba(243, 85, 37, 0.5);
+}
+.btn:hover {
+  background-color: rgb(243 244 246);
+  border-color: rgb(75 85 99);
+  transform: translateY(-2px);
+}
+.btn:focus {
+  outline: 2px solid var(--tw-ring-color);
+  outline-offset: 2px;
+}
+@media (min-width: 768px) {
+  .btn {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+.dark .btn {
+  color: rgb(203 213 225);
+  border-color: rgb(100 116 139);
+}
+.dark .btn:hover {
+  background-color: rgb(30 41 59);
+  border-color: rgb(30 41 59);
+}
+
+/* Primary button - Orange Gradient with glow */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.375;
+  padding: 0.875rem 1.5rem;
+  cursor: pointer;
+  color: white;
+  background: var(--gradient-primary);
+  background-size: 200% 200%;
+  box-shadow: 0 4px 14px 0 rgba(243, 85, 37, 0.39);
+  transition:
+    all 0.3s ease-out,
+    background-position 0.5s ease;
+}
+.btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(243, 85, 37, 0.6);
+  transform: translateY(-4px);
+  background-position: 100% 100%;
+  background: linear-gradient(135deg, rgb(255 120 70) 0%, rgb(243 85 37) 100%);
+}
+@media (min-width: 768px) {
+  .btn-primary {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+.dark .btn-primary {
+  color: white;
+}
+
+/* Secondary button - Outline with gradient hover */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-primary);
+  background-color: transparent;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.375;
+  padding: 0.875rem 1.5rem;
+  cursor: pointer;
+  color: var(--color-primary);
+  transition: all 0.3s ease-out;
+}
+.btn-secondary:hover {
+  color: white;
+  border-color: transparent;
+  transform: translateY(-4px);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-primary);
+}
+@media (min-width: 768px) {
+  .btn-secondary {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Tertiary button - Ghost/link style */
+.btn-tertiary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  background-color: transparent;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.375;
+  padding: 0.875rem 1.5rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  box-shadow: none;
+  transition: all 0.3s ease-out;
+}
+.btn-tertiary:hover {
+  color: var(--color-primary);
+  background-color: transparent;
+}
+@media (min-width: 768px) {
+  .btn-tertiary {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+.dark .btn-tertiary {
+  color: rgb(156 163 175);
+}
+.dark .btn-tertiary:hover {
+  color: var(--color-primary);
+}
+
+/* ============================================
+   HEADER STYLES - Variants
+   ============================================ */
+
+/*
+ * Header Variants:
+ * - solid (default): White background with shadow
+ * - transparent: No background, becomes solid on scroll
+ * - glass: Semi-transparent with blur effect
+ * - floating: Rounded with margins, glass effect
+ */
+
+/* Base header transitions */
+#header {
+  transition: all var(--transition-normal);
+}
+
+#header .header-bg {
+  transition: all var(--transition-normal);
+}
+
+/* ---- SOLID VARIANT (default) ---- */
+#header.header-solid .header-bg,
+#header:not([class*='header-']) .header-bg {
+  background-color: var(--color-bg-page);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- TRANSPARENT VARIANT ---- */
+#header.header-transparent .header-bg {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+#header.header-transparent .header-logo-text,
+#header.header-transparent .header-nav-link,
+#header.header-transparent .header-toggle-icon {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#header.header-transparent.scroll .header-bg {
+  background-color: var(--color-bg-page);
+  box-shadow: var(--shadow-md);
+}
+
+#header.header-transparent.scroll .header-logo-text,
+#header.header-transparent.scroll .header-nav-link,
+#header.header-transparent.scroll .header-toggle-icon {
+  color: var(--color-text-default);
+  text-shadow: none;
+}
+
+/* ---- GLASS VARIANT ---- */
+#header.header-glass .header-bg {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark #header.header-glass .header-bg {
+  background-color: rgba(17, 24, 39, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ---- FLOATING VARIANT ---- */
+#header.header-floating {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  width: auto;
+}
+
+#header.header-floating .header-bg {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark #header.header-floating .header-bg {
+  background-color: rgba(17, 24, 39, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ---- TRANSPARENT + FLOATING (on scroll) ---- */
+#header.header-transparent-floating .header-bg {
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: var(--radius-2xl);
+}
+
+#header.header-transparent-floating .header-logo-text,
+#header.header-transparent-floating .header-nav-link,
+#header.header-transparent-floating .header-toggle-icon {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#header.header-transparent-floating.scroll {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  width: auto;
+}
+
+#header.header-transparent-floating.scroll .header-bg {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+#header.header-transparent-floating.scroll .header-logo-text,
+#header.header-transparent-floating.scroll .header-nav-link,
+#header.header-transparent-floating.scroll .header-toggle-icon {
+  color: var(--color-text-default);
+  text-shadow: none;
+}
+
+/* Legacy scroll support */
+#header.scroll > div:first-child {
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0.375rem 1.5rem 0 rgb(140 152 164 / 13%);
+}
+@media (min-width: 768px) {
+  #header.scroll > div:first-child {
+    background-color: rgb(255 255 255 / 0.9);
+    backdrop-filter: blur(12px);
+  }
+}
+
+.dark #header.scroll > div:first-child,
+#header.scroll.dark > div:first-child {
+  background-color: var(--color-bg-page);
+  border-bottom: 1px solid rgb(107 114 128 / 0.2);
+  box-shadow: none;
+}
+@media (min-width: 768px) {
+  .dark #header.scroll > div:first-child,
+  #header.scroll.dark > div:first-child {
+    background-color: rgba(3, 6, 33, 0.9);
+  }
+}
+
+#header.expanded nav {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 70px !important;
+  padding: 0 5px;
+  background: var(--color-secondary);
+}
+
+#header.expanded nav a,
+#header.expanded nav button {
+  color: white;
+}
+
+#header.expanded nav a:hover,
+#header.expanded nav button:hover {
+  color: var(--color-primary);
+}
+
+/* ============================================
+   DROPDOWN & ICONS
+   ============================================ */
+.dropdown:focus .dropdown-menu,
+.dropdown:focus-within .dropdown-menu,
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+[astro-icon].icon-light > * {
+  stroke-width: 1.2;
+}
+
+[astro-icon].icon-bold > * {
+  stroke-width: 2.4;
+}
+
+[data-aw-toggle-menu] path {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-aw-toggle-menu].expanded g > path:first-child {
+  transform: rotate(-45deg) translateY(15px) translateX(-3px);
+}
+
+[data-aw-toggle-menu].expanded g > path:last-child {
+  transform: rotate(45deg) translateY(-8px) translateX(14px);
+}
+
+/* ============================================
+   REAL ESTATE SPECIFIC UTILITIES
+   ============================================ */
+/* Property card hover effect */
+.property-card {
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.property-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Price tag styling */
+.price-tag {
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+}
+
+/* Status badges */
+.status-available {
+  background-color: rgb(34 197 94 / 0.1);
+  color: rgb(34 197 94);
+  border: 1px solid rgb(34 197 94 / 0.3);
+}
+
+.status-pending {
+  background-color: rgb(234 179 8 / 0.1);
+  color: rgb(180 140 8);
+  border: 1px solid rgb(234 179 8 / 0.3);
+}
+
+.status-sold {
+  background-color: rgb(238 98 107 / 0.1);
+  color: rgb(238 98 107);
+  border: 1px solid rgb(238 98 107 / 0.3);
+}
+
+/* Image gallery hover */
+.gallery-image {
+  transition: transform var(--transition-normal);
+}
+
+.gallery-image:hover {
+  transform: scale(1.05);
+}
+
+/* CTA Button hover glow */
+.btn-cta:hover {
+  box-shadow: var(--shadow-primary);
+}
+
+/* Dark section text adjustments */
+.bg-secondary h1,
+.bg-secondary h2,
+.bg-secondary h3,
+.bg-secondary h4,
+.bg-secondary h5,
+.bg-secondary h6 {
+  color: white;
+}
+
+.bg-secondary p,
+.bg-secondary span {
+  color: var(--color-text-light);
+}
+
+/* Feature icons */
+.feature-icon {
+  background: var(--gradient-card-hover);
+  border-radius: 50%;
+  padding: 1rem;
+}
+
+/* Search bar styling */
+.search-bar {
+  box-shadow: var(--shadow-lg);
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.dark .search-bar {
+  background: rgb(31 41 55);
+}
+
+/* To deprecated */
+.dd *:first-child {
+  margin-top: 0;
+}
+
+/* ============================================
+   DARK MODE OVERRIDES
+   ============================================ */
+.dark {
+  --color-primary: rgb(255 120 75);
+  --color-primary-light: rgb(255 150 110);
+  --color-primary-dark: rgb(243 85 37);
+
+  --color-secondary: rgb(51 143 255);
+  --color-secondary-light: rgb(100 170 255);
+  --color-secondary-dark: rgb(0 113 248);
+
+  --color-accent: rgb(255 130 137);
+
+  --color-text-heading: rgb(255 255 255);
+  --color-text-default: rgb(229 231 235);
+  --color-text-muted: rgb(156 163 175);
+  --color-text-light: rgb(229 231 235);
+
+  --color-bg-page: rgb(17 24 39);
+
+  --shadow-primary: 0 4px 14px 0 rgba(255, 120, 75, 0.3);
+  --shadow-secondary: 0 4px 14px 0 rgba(51, 143, 255, 0.3);
+}
+
+::selection {
+  background-color: rgba(243, 85, 37, 0.2);
+}
+
+.dark ::selection {
+  background-color: rgba(243, 85, 37, 0.4);
+  color: white;
+}
+
+/* Global base styles */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

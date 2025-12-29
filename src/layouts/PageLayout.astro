@@ -1,0 +1,48 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import Header from '~/components/widgets/Header.astro';
+import Footer from '~/components/widgets/Footer.astro';
+// import Announcement from '~/components/widgets/Announcement.astro'; // Dezactivat temporar
+import WhatsAppButton from '~/components/common/WhatsAppButton.astro';
+import MobileStickyBar from '~/components/common/MobileStickyBar.astro';
+import Newsletter from '~/components/common/Newsletter.astro';
+
+import { headerData, footerData } from '~/navigation';
+
+import type { MetaData } from '~/types';
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+---
+
+<Layout metadata={metadata}>
+  <!-- Announcement bar dezactivat temporar
+  <slot name="announcement">
+    <Announcement />
+  </slot>
+  -->
+  <slot name="header">
+    <Header {...headerData} isSticky />
+  </slot>
+  <main>
+    <slot />
+  </main>
+
+  <!-- Newsletter Section - Before Footer -->
+  <slot name="newsletter">
+    <Newsletter />
+  </slot>
+
+  <slot name="footer">
+    <Footer {...footerData} />
+  </slot>
+
+  <!-- WhatsApp Floating Button -->
+  <WhatsAppButton />
+
+  <!-- Mobile Sticky CTA Bar -->
+  <MobileStickyBar />
+</Layout>

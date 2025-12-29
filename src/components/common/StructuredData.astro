@@ -1,0 +1,175 @@
+---
+/**
+ * Schema.org Structured Data for SEO
+ * Improves rich snippets in Google Search results
+ */
+import siteSettings from '~/data/settings/site.json';
+
+interface ServiceData {
+  name: string;
+  description: string;
+  price?: number;
+}
+
+interface CourseData {
+  name: string;
+  description: string;
+  price?: number;
+}
+
+interface Props {
+  type?: 'LocalBusiness' | 'Service' | 'Course' | 'FAQPage';
+  data?: {
+    service?: ServiceData;
+    course?: CourseData;
+  };
+}
+
+const { type = 'LocalBusiness', data = {} } = Astro.props;
+
+// Base LocalBusiness schema
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HealthAndBeautyBusiness',
+  '@id': 'https://terapiienergetice.dev.altiatech.ro/#business',
+  name: siteSettings.siteName,
+  alternateName: 'Revital Harmony',
+  description: siteSettings.description,
+  url: 'https://terapiienergetice.dev.altiatech.ro',
+  telephone: `+${siteSettings.contact.whatsapp}`,
+  email: siteSettings.contact.email,
+  image: 'https://terapiienergetice.dev.altiatech.ro/images/og-image.jpg',
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: siteSettings.address.street,
+    addressLocality: siteSettings.address.city,
+    addressRegion: siteSettings.address.county,
+    postalCode: siteSettings.address.postalCode,
+    addressCountry: 'RO',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: '44.4268',
+    longitude: '26.1172',
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '10:00',
+      closes: '19:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '10:00',
+      closes: '14:00',
+    },
+  ],
+  founder: {
+    '@type': 'Person',
+    name: siteSettings.agencyName,
+    jobTitle: siteSettings.agencyTitle,
+    description: siteSettings.agencyBio,
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Terapii Energetice',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Terapia Bowen',
+          description: 'Tehnică terapeutică blândă care stimulează vindecarea naturală',
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Access Bars',
+          description: '32 de puncte energetice pe cap pentru eliberarea blocajelor',
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Facelift Energetic',
+          description: 'Lifting facial natural prin tehnici energetice',
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Reiki',
+          description: 'Vindecarea prin transferul de energie universală',
+        },
+      },
+    ],
+  },
+  sameAs: [siteSettings.socialMedia.facebook, siteSettings.socialMedia.instagram].filter(Boolean),
+};
+
+// Service schema for therapy pages
+const serviceSchema = data.service
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: data.service.name,
+      description: data.service.description,
+      provider: {
+        '@type': 'HealthAndBeautyBusiness',
+        '@id': 'https://terapiienergetice.dev.altiatech.ro/#business',
+      },
+      areaServed: {
+        '@type': 'City',
+        name: 'București',
+      },
+      offers: {
+        '@type': 'Offer',
+        price: data.service.price,
+        priceCurrency: 'RON',
+      },
+    }
+  : null;
+
+// Course schema for course pages
+const courseSchema = data.course
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Course',
+      name: data.course.name,
+      description: data.course.description,
+      provider: {
+        '@type': 'Organization',
+        name: siteSettings.siteName,
+        sameAs: 'https://terapiienergetice.dev.altiatech.ro',
+      },
+      offers: {
+        '@type': 'Offer',
+        price: data.course.price,
+        priceCurrency: 'RON',
+        availability: 'https://schema.org/InStock',
+      },
+    }
+  : null;
+
+// Select the appropriate schema based on type
+let schema: typeof localBusinessSchema | typeof serviceSchema | typeof courseSchema | null;
+switch (type) {
+  case 'Service':
+    schema = serviceSchema;
+    break;
+  case 'Course':
+    schema = courseSchema;
+    break;
+  default:
+    schema = localBusinessSchema;
+}
+---
+
+{schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema, null, 0)} />}

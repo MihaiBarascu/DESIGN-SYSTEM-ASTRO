@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "tagline": "Despre Noi",
+    "title": "Casa Perfectă",
+    "subtitle": "Agenție imobiliară de încredere în București, cu peste 15 ani de experiență în vânzări, cumpărări și închirieri de proprietăți.",
+    "image": "~/assets/images/hero/hero-1.jpg"
+  },
+  "story": {
+    "tagline": "Povestea Noastră",
+    "title": "O Echipă Dedicată Succesului Tău",
+    "content": "Casa Perfectă a fost fondată în 2009 cu o misiune simplă: să ajutăm oamenii să găsească proprietatea visurilor lor. De-a lungul anilor, am construit o echipă de profesioniști pasionați care înțeleg că fiecare tranzacție imobiliară este o decizie importantă în viața clienților noștri.\n\nAstăzi, suntem una dintre cele mai respectate agenții imobiliare din București, cu o rețea vastă de proprietăți și un portofoliu impresionant de clienți mulțumiți. Succesul nostru se bazează pe valorile fundamentale: onestitate, transparență și dedicare față de nevoile clienților.\n\nIndiferent dacă vinzi, cumperi sau închiriezi, echipa Casa Perfectă este alături de tine la fiecare pas al procesului."
+  },
+  "values": {
+    "title": "Valorile Care Ne Definesc",
+    "subtitle": "Principiile care ghidează fiecare interacțiune cu clienții noștri",
+    "items": [
+      {
+        "title": "Integritate",
+        "description": "Operăm cu onestitate și transparență în fiecare tranzacție, oferind sfaturi obiective și informații complete."
+      },
+      {
+        "title": "Profesionalism",
+        "description": "Echipa noastră este formată din agenți certificați cu experiență vastă în piața imobiliară din București."
+      },
+      {
+        "title": "Dedicare",
+        "description": "Suntem dedicați să găsim soluția perfectă pentru fiecare client, indiferent de buget sau preferințe."
+      },
+      {
+        "title": "Rezultate",
+        "description": "Ne concentrăm pe obținerea celor mai bune rezultate pentru clienții noștri, fie că vând sau cumpără."
+      },
+      {
+        "title": "Relații pe Termen Lung",
+        "description": "Construim relații de încredere cu clienții noștri, care revin și ne recomandă prietenilor."
+      },
+      {
+        "title": "Inovație",
+        "description": "Folosim cele mai noi tehnologii și metode de promovare pentru a accelera tranzacțiile."
+      }
+    ]
+  }
+}

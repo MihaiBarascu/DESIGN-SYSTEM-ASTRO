@@ -1,0 +1,22 @@
+{
+  "hero": {
+    "tagline": "Contact",
+    "title": "Contact Terapii Energetice",
+    "subtitle": "Suntem aici pentru a răspunde întrebărilor tale și pentru a te ajuta să faci primul pas spre vindecare și dezvoltare personală. Contactează-ne pentru a programa o sesiune de terapie sau pentru a te înscrie la cursurile noastre."
+  },
+  "contactInfo": {
+    "phone": "0774512905",
+    "email": "office@terapiienergetice.ro",
+    "emailSecondary": "monabatir12@gmail.com",
+    "whatsapp": "+40774512905",
+    "address": "Bulevardul Decebal Nr. 9 Sector 3 - București",
+    "schedule": "Cu programare",
+    "googleMapsUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.8968037068687!2d26.116115315511886!3d44.42567197910193!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4b8b3b3b3b%3A0x3b3b3b3b3b3b3b3b!2sBulevardul%20Decebal%209%2C%20Bucure%C8%99ti!5e0!3m2!1sro!2sro!4v1234567890!5m2!1sro!2sro"
+  },
+  "form": {
+    "title": "Formă de Contact",
+    "subtitle": "Completează formularul de mai jos și te vom contacta în cel mai scurt timp posibil.",
+    "submitButtonText": "Trimite mesaj",
+    "successMessage": "Mulțumim pentru mesaj! Vom reveni cu un răspuns în cel mai scurt timp."
+  }
+}

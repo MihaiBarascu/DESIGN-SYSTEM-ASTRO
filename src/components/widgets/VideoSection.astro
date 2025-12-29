@@ -1,0 +1,80 @@
+---
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Button from '~/components/ui/Button.astro';
+import type { Widget, CallToAction } from '~/types';
+
+export interface Props extends Widget {
+  title?: string;
+  subtitle?: string;
+  tagline?: string;
+  videoSrc: string;
+  videoPoster?: string;
+  content?: string;
+  isReversed?: boolean;
+  callToAction?: CallToAction;
+}
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  videoSrc,
+  videoPoster,
+  content = await Astro.slots.render('content'),
+  isReversed = false,
+  callToAction,
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+
+<WidgetWrapper {id} {isDark} containerClass={`max-w-7xl ${classes?.container ?? ''}`} {bg}>
+  <div class={`md:flex gap-8 md:gap-12 items-center ${isReversed ? 'md:flex-row-reverse' : ''}`}>
+    <!-- Video -->
+    <div class="md:basis-1/2 mb-8 md:mb-0">
+      <div class="relative rounded-xl overflow-hidden shadow-2xl aspect-video video-container">
+        <video
+          controls
+          preload="metadata"
+          poster={videoPoster}
+          class="w-full h-full object-cover"
+          controlslist="nodownload"
+          disablepictureinpicture
+        >
+          <source src={videoSrc} type="video/mp4" />
+          Browserul tau nu suporta video.
+        </video>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="md:basis-1/2">
+      {tagline && <p class="text-sm text-primary font-bold tracking-wide uppercase mb-2">{tagline}</p>}
+
+      {
+        title && (
+          <h2
+            class="text-3xl md:text-4xl font-bold leading-tight mb-4 font-heading text-heading dark:text-white"
+            set:html={title}
+          />
+        )
+      }
+
+      {subtitle && <p class="text-lg text-muted mb-6" set:html={subtitle} />}
+
+      {content && <div class="prose dark:prose-invert mb-6" set:html={content} />}
+
+      <slot />
+
+      {
+        callToAction && (
+          <div class="mt-6">
+            <Button {...callToAction} />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</WidgetWrapper>

@@ -1,0 +1,84 @@
+---
+import type { CallToAction } from '~/types';
+import Button from '~/components/ui/Button.astro';
+
+export interface Props {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  tagline?: string;
+  videoSrc: string;
+  videoPoster?: string;
+  actions?: CallToAction[];
+  height?: 'full' | 'screen' | 'large' | 'medium';
+}
+
+const {
+  id,
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  videoSrc,
+  videoPoster,
+  actions = [],
+  height = 'screen',
+} = Astro.props;
+
+const heightClasses = {
+  full: 'min-h-screen',
+  screen: 'min-h-screen',
+  large: 'min-h-[70vh]',
+  medium: 'min-h-[50vh]',
+};
+---
+
+<section class:list={['relative not-prose overflow-hidden', heightClasses[height]]} {...id ? { id } : {}}>
+  <!-- Video Background -->
+  <div class="absolute inset-0 w-full h-full">
+    <video autoplay muted loop playsinline poster={videoPoster} class="absolute inset-0 w-full h-full object-cover">
+      <source src={videoSrc} type="video/mp4" />
+    </video>
+    <!-- Overlay gradient pentru lizibilitate mai buna -->
+    <div class="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/80 to-secondary/60"></div>
+  </div>
+
+  <!-- Content - stil plasturi: fără container, text stânga -->
+  <div class="relative z-10 flex items-center h-full min-h-[inherit]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="max-w-3xl py-20 md:py-32 lg:py-40">
+        {
+          title && (
+            <h1
+              class="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold leading-tight tracking-tight mb-4
+                   font-heading text-white"
+              set:html={title}
+            />
+          )
+        }
+
+        {subtitle && <p class="text-base sm:text-lg text-white/80 mb-3 leading-relaxed max-w-xl" set:html={subtitle} />}
+
+        {tagline && <p class="text-sm sm:text-base text-primary font-semibold mb-6" set:html={tagline} />}
+
+        {
+          actions && actions.length > 0 && (
+            <div class="flex flex-col sm:flex-row gap-4">
+              {actions.map((action) => (
+                <Button {...action} class="sm:w-auto" />
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce hidden md:block">
+    <a href="#despre" class="text-white/70 hover:text-white transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </a>
+  </div>
+</section>

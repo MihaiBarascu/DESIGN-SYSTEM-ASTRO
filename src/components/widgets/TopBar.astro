@@ -1,0 +1,78 @@
+---
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  email?: string;
+  address?: string;
+  phone?: string;
+  socials?: Array<{ icon: string; href: string; label: string }>;
+  class?: string;
+}
+
+const {
+  email = 'contact@casaperfecta.ro',
+  address = 'Bd. Unirii 45, București',
+  phone,
+  socials = [
+    { icon: 'tabler:brand-facebook', href: '#', label: 'Facebook' },
+    { icon: 'tabler:brand-twitter', href: '#', label: 'Twitter' },
+    { icon: 'tabler:brand-linkedin', href: '#', label: 'LinkedIn' },
+    { icon: 'tabler:brand-instagram', href: '#', label: 'Instagram' },
+  ],
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={['bg-primary text-white text-sm py-2', className]}>
+  <div class="container mx-auto px-4 md:px-6">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-2">
+      <ul class="flex flex-wrap items-center gap-4 md:gap-6">
+        {
+          email && (
+            <li class="flex items-center gap-2">
+              <Icon name="tabler:mail" class="w-4 h-4" />
+              <a href={`mailto:${email}`} class="hover:text-white/80 transition-colors">
+                {email}
+              </a>
+            </li>
+          )
+        }
+        {
+          address && (
+            <li class="flex items-center gap-2">
+              <Icon name="tabler:map-pin" class="w-4 h-4" />
+              <span>{address}</span>
+            </li>
+          )
+        }
+        {
+          phone && (
+            <li class="flex items-center gap-2">
+              <Icon name="tabler:phone" class="w-4 h-4" />
+              <a href={`tel:${phone}`} class="hover:text-white/80 transition-colors">
+                {phone}
+              </a>
+            </li>
+          )
+        }
+      </ul>
+      <ul class="flex items-center gap-3">
+        {
+          socials.map((social) => (
+            <li>
+              <a
+                href={social.href}
+                aria-label={social.label}
+                class="hover:text-white/80 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name={social.icon} class="w-4 h-4" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</div>

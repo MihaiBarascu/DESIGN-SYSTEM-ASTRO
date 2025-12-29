@@ -1,0 +1,124 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import TestimonialCard from '~/components/widgets/TestimonialCard.astro';
+import { getCollection } from 'astro:content';
+import siteSettings from '~/data/settings/site.json';
+
+// Get all published testimonials
+const allTestimoniale = await getCollection('testimoniale', ({ data }) => data.published !== false);
+
+// Group testimonials by service (a testimonial can appear in multiple categories)
+const testimonialsByServiciu: Record<string, typeof allTestimoniale> = {};
+
+allTestimoniale.forEach((testimonial) => {
+  const servicii = testimonial.data.servicii || [];
+
+  // If no services, put in "Altele"
+  if (servicii.length === 0) {
+    if (!testimonialsByServiciu['Altele']) {
+      testimonialsByServiciu['Altele'] = [];
+    }
+    testimonialsByServiciu['Altele'].push(testimonial);
+    return;
+  }
+
+  // Add to each service category
+  servicii.forEach((serviciu) => {
+    if (!testimonialsByServiciu[serviciu]) {
+      testimonialsByServiciu[serviciu] = [];
+    }
+    testimonialsByServiciu[serviciu].push(testimonial);
+  });
+});
+
+// Sort each group by date (newest first), with video testimonials first
+Object.keys(testimonialsByServiciu).forEach((key) => {
+  testimonialsByServiciu[key].sort((a, b) => {
+    // Video testimonials first
+    if (a.data.youtubeId && !b.data.youtubeId) return -1;
+    if (!a.data.youtubeId && b.data.youtubeId) return 1;
+    // Then by date
+    const dateA = a.data.publishDate ? new Date(a.data.publishDate).getTime() : 0;
+    const dateB = b.data.publishDate ? new Date(b.data.publishDate).getTime() : 0;
+    return dateB - dateA;
+  });
+});
+
+// Define order of categories for real estate services
+const categoryOrder = ['Vanzare Apartament', 'Vanzare Casa', 'Cumparare', 'Inchiriere', 'Consultanta', 'Evaluare'];
+
+const sortedCategories = categoryOrder.filter((cat) => testimonialsByServiciu[cat]);
+// Add any categories not in the predefined order
+Object.keys(testimonialsByServiciu).forEach((cat) => {
+  if (!sortedCategories.includes(cat)) {
+    sortedCategories.push(cat);
+  }
+});
+
+const metadata = {
+  title: `Testimoniale | ${siteSettings.siteName}`,
+  description:
+    'Citeste parerile clientilor nostri despre serviciile imobiliare. Testimoniale reale de la cumparatori si vanzatori multumiti.',
+};
+---
+
+<Layout metadata={metadata}>
+  <Hero
+    tagline="Testimoniale"
+    title="Ce spun clienții noștri"
+    subtitle="Descoperă experiențele clienților care și-au găsit casa visurilor sau au vândut cu succes proprietatea lor."
+  />
+
+  <section class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      {
+        sortedCategories.map((serviciu) => (
+          <div class="mb-16" id={serviciu.toLowerCase().replace(/\s+/g, '-')}>
+            <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+              <span class="text-primary">{serviciu}</span>
+              <span class="text-sm font-normal text-muted ml-2">
+                ({testimonialsByServiciu[serviciu].length} testimoniale)
+              </span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {testimonialsByServiciu[serviciu].map((testimonial) => (
+                <TestimonialCard
+                  name={testimonial.data.name}
+                  body={testimonial.body}
+                  rating={testimonial.data.rating}
+                  youtubeId={testimonial.data.youtubeId}
+                  profession={testimonial.data.profession}
+                  location={testimonial.data.location}
+                />
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-secondary text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      <h2 class="text-3xl font-bold mb-4">Cauti o proprietate sau vrei sa vinzi?</h2>
+      <p class="text-white/80 mb-8">
+        Contacteaza-ne pentru o consultatie gratuita. Echipa noastra te va ajuta sa gasesti solutia perfecta.
+      </p>
+      <a
+        href="/contact"
+        class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold px-8 py-4 rounded-full transition-colors"
+      >
+        Contacteaza-ne
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </a>
+    </div>
+  </section>
+</Layout>

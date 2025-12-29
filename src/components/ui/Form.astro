@@ -1,0 +1,123 @@
+---
+import type { Form as Props } from '~/types';
+import Button from '~/components/ui/Button.astro';
+import siteSettings from '~/data/settings/site.json';
+
+const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } = Astro.props;
+
+// FormSubmit integration - uses email from site settings
+const formSubmitEmail = siteSettings.contact?.email || 'office@terapiienergetice.ro';
+const formAction = `https://formsubmit.co/${formSubmitEmail}`;
+---
+
+<form action={formAction} method="POST" class="form-container">
+  <!-- FormSubmit Configuration -->
+  <input type="hidden" name="_subject" value="Mesaj nou de pe site-ul Terapii Energetice" />
+  <input type="hidden" name="_captcha" value="true" />
+  <input type="hidden" name="_template" value="box" />
+  <input type="hidden" name="_next" value="https://terapiienergetice.ro/contact?success=true" />
+  <input type="text" name="_honey" style="display:none" />
+
+  {
+    inputs &&
+      inputs.map(
+        ({ type = 'text', name, label = '', autocomplete = 'on', placeholder = '' }) =>
+          name && (
+            <div class="mb-6">
+              {label && (
+                <label for={name} class="block text-sm font-medium">
+                  {label}
+                </label>
+              )}
+              <input
+                type={type}
+                name={name}
+                id={name}
+                autocomplete={autocomplete}
+                placeholder={placeholder}
+                class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+              />
+            </div>
+          )
+      )
+  }
+
+  {
+    textarea && (
+      <div>
+        <label for="textarea" class="block text-sm font-medium">
+          {textarea.label}
+        </label>
+        <textarea
+          id="textarea"
+          name={textarea.name ? textarea.name : 'message'}
+          rows={textarea.rows ? textarea.rows : 4}
+          placeholder={textarea.placeholder}
+          class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+        />
+      </div>
+    )
+  }
+
+  {
+    disclaimer && (
+      <div class="mt-3 flex items-start">
+        <div class="flex mt-0.5">
+          <input
+            id="disclaimer"
+            name="disclaimer"
+            type="checkbox"
+            class="cursor-pointer mt-1 py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+          />
+        </div>
+        <div class="ml-3">
+          <label for="disclaimer" class="cursor-pointer select-none text-sm text-gray-600 dark:text-gray-400">
+            {disclaimer.label}
+          </label>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    button && (
+      <div class="mt-10 grid">
+        <Button variant="primary" type="submit">
+          {button}
+        </Button>
+      </div>
+    )
+  }
+
+  {
+    description && (
+      <div class="mt-3 text-center">
+        <p class="text-sm text-gray-600 dark:text-gray-400">{description}</p>
+      </div>
+    )
+  }
+</form>
+
+<style>
+  /* Plasturi-style form - scoped to this component */
+  .form-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .form-container input:not([type='hidden']):not([type='checkbox']),
+  .form-container textarea {
+    transition: all 150ms ease;
+  }
+
+  .form-container input:not([type='hidden']):not([type='checkbox']):focus,
+  .form-container textarea:focus {
+    outline: none;
+    border-color: var(--aw-color-primary);
+    box-shadow: 0 0 0 3px rgba(243, 85, 37, 0.2);
+  }
+
+  .form-container label {
+    margin-bottom: 0.5rem;
+  }
+</style>

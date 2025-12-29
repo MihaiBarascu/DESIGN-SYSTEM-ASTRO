@@ -1,0 +1,15 @@
+dist
+node_modules
+.github
+.changeset
+.claude
+
+# Documentation - contine code examples care nu trebuie parsate
+docs/
+
+# Content managed by Pages CMS - formatting nu e critic
+src/data/pages/
+src/data/terapii/
+src/data/cursuri/
+src/data/testimoniale/
+src/content/post/

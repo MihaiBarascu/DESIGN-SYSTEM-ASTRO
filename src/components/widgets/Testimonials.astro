@@ -1,0 +1,90 @@
+---
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Button from '~/components/ui/Button.astro';
+import Image from '~/components/common/Image.astro';
+import type { Testimonials as Props } from '~/types';
+
+const {
+  title = '',
+  subtitle = '',
+  tagline = '',
+  testimonials = [],
+  callToAction,
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {
+      testimonials &&
+        testimonials.map(({ title, testimonial, name, job, image }) => (
+          <div class="flex h-auto">
+            <div class="testimonial-card flex flex-col p-6 md:p-8 rounded-xl bg-white dark:bg-slate-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 dark:shadow-none dark:border dark:border-slate-600 relative">
+              {title && <h2 class="text-lg font-medium leading-6 pb-4">{title}</h2>}
+              {testimonial && (
+                <blockquote class="flex-auto relative z-10">
+                  <p class="text-muted text-lg leading-relaxed line-clamp-4">{testimonial}</p>
+                </blockquote>
+              )}
+
+              <hr class="border-slate-200 dark:border-slate-600 my-4" />
+
+              <div class="flex items-center">
+                {image && (
+                  <div class="h-12 w-12 rounded-full border-2 border-primary/20 overflow-hidden">
+                    {typeof image === 'string' ? (
+                      <Fragment set:html={image} />
+                    ) : (
+                      <Image
+                        class="h-12 w-12 rounded-full min-w-full min-h-full object-cover"
+                        width={48}
+                        height={48}
+                        widths={[400, 768]}
+                        layout="fixed"
+                        {...image}
+                      />
+                    )}
+                  </div>
+                )}
+
+                <div class="grow ml-4 rtl:ml-0 rtl:mr-4">
+                  {name && <p class="text-base font-semibold">{name}</p>}
+                  {job && <p class="text-sm text-muted">{job}</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+    }
+  </div>
+  {
+    callToAction && (
+      <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
+        <Button {...callToAction} />
+      </div>
+    )
+  }
+</WidgetWrapper>
+
+<style>
+  /* Plasturi-style quote mark - scoped to this component */
+  .testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    font-size: 5rem;
+    color: var(--aw-color-primary);
+    opacity: 0.15;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+</style>

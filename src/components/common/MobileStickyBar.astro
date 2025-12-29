@@ -1,0 +1,95 @@
+---
+/**
+ * Mobile Sticky CTA Bar
+ * Increases conversions on mobile with always-visible action buttons
+ * Hidden on desktop, visible on mobile at bottom of screen
+ */
+import siteSettings from '~/data/settings/site.json';
+import { Icon } from 'astro-icon/components';
+
+const phone = siteSettings.contact.phone;
+---
+
+<div class="mobile-sticky-bar">
+  <a href="/contact" class="sticky-btn primary">
+    <Icon name="tabler:calendar" class="w-5 h-5" />
+    <span>Programează</span>
+  </a>
+  <a href={`tel:${phone}`} class="sticky-btn secondary">
+    <Icon name="tabler:phone" class="w-5 h-5" />
+    <span>Sună acum</span>
+  </a>
+</div>
+
+<style>
+  .mobile-sticky-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    background: white;
+    padding: 12px 16px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    gap: 12px;
+    /* Safe area for iPhones with home bar */
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Only show on mobile (< 768px) */
+  @media (max-width: 767px) {
+    .mobile-sticky-bar {
+      display: flex;
+    }
+  }
+
+  .sticky-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .sticky-btn.primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+
+  .sticky-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
+  }
+
+  .sticky-btn.secondary {
+    background: var(--color-secondary);
+    color: white;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--color-secondary) 30%, transparent);
+  }
+
+  .sticky-btn.secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-secondary) 40%, transparent);
+  }
+
+  /* Dark mode support */
+  :global(.dark) .mobile-sticky-bar {
+    background: var(--color-bg-page);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Adjust WhatsApp button position when sticky bar is visible */
+  @media (max-width: 767px) {
+    :global(.whatsapp-button) {
+      bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+</style>

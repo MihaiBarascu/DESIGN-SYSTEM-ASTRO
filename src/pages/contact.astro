@@ -1,0 +1,241 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import ContactUs from '~/components/widgets/Contact.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { Icon } from 'astro-icon/components';
+
+// Import editable content from Pages CMS JSON
+import contactData from '~/data/pages/contact.json';
+
+const { hero, contactInfo, form } = contactData;
+
+// Check for success message
+const url = new URL(Astro.request.url);
+const isSuccess = url.searchParams.get('success') === 'true';
+
+const metadata = {
+  title: 'Contact - Programează o Ședință | Terapii Energetice București',
+  description: contactInfo.address + '. Telefon: ' + contactInfo.phone + '. Programări telefonice sau prin email.',
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Section -->
+  <HeroText tagline={hero.tagline} title={hero.title}>
+    <Fragment slot="subtitle">
+      {hero.subtitle}
+    </Fragment>
+  </HeroText>
+
+  <!-- Success Message -->
+  {
+    isSuccess && (
+      <div class="max-w-3xl mx-auto px-4 mb-8">
+        <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl p-6 text-center">
+          <div class="w-16 h-16 mx-auto mb-4 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center">
+            <Icon name="tabler:check" class="w-8 h-8 text-green-600 dark:text-green-400" />
+          </div>
+          <h3 class="text-xl font-bold text-green-800 dark:text-green-200 mb-2">Mesaj trimis cu succes!</h3>
+          <p class="text-green-700 dark:text-green-300">{form.successMessage}</p>
+        </div>
+      </div>
+    )
+  }
+
+  <!-- Main Contact Section -->
+  <section class="py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Contact Info Side -->
+        <div class="space-y-8">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold mb-6">Informații de Contact</h2>
+            <p class="text-muted mb-8">
+              Suntem aici pentru a răspunde întrebărilor tale și pentru a te ajuta să începi călătoria spre echilibru și
+              vindecare.
+            </p>
+          </div>
+
+          <!-- Contact Cards -->
+          <div class="space-y-4">
+            <!-- Phone -->
+            <a
+              href={`tel:${contactInfo.phone.replace(/\s/g, '')}`}
+              class="flex items-center gap-4 p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl hover:from-primary/20 hover:to-primary/10 transition-all group"
+            >
+              <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                <Icon name="tabler:phone" class="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p class="text-sm text-muted">Telefon</p>
+                <p class="text-lg font-semibold group-hover:text-primary transition-colors">{contactInfo.phone}</p>
+              </div>
+            </a>
+
+            <!-- WhatsApp -->
+            <a
+              href={`https://wa.me/${contactInfo.whatsapp.replace(/[^0-9]/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-4 p-4 bg-gradient-to-r from-green-500/10 to-green-500/5 rounded-xl hover:from-green-500/20 hover:to-green-500/10 transition-all group"
+            >
+              <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <Icon name="tabler:brand-whatsapp" class="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p class="text-sm text-muted">WhatsApp</p>
+                <p class="text-lg font-semibold group-hover:text-green-600 transition-colors">Scrie-ne pe WhatsApp</p>
+              </div>
+            </a>
+
+            <!-- Email -->
+            <a
+              href={`mailto:${contactInfo.email}`}
+              class="flex items-center gap-4 p-4 bg-gradient-to-r from-secondary/10 to-secondary/5 rounded-xl hover:from-secondary/20 hover:to-secondary/10 transition-all group"
+            >
+              <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
+                <Icon name="tabler:mail" class="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p class="text-sm text-muted">Email</p>
+                <p class="text-lg font-semibold group-hover:text-secondary transition-colors">{contactInfo.email}</p>
+                {contactInfo.emailSecondary && <p class="text-sm text-muted">{contactInfo.emailSecondary}</p>}
+              </div>
+            </a>
+
+            <!-- Address -->
+            <div
+              class="flex items-start gap-4 p-4 bg-gradient-to-r from-gray-100 to-gray-50 dark:from-slate-800 dark:to-slate-700 rounded-xl"
+            >
+              <div
+                class="w-12 h-12 bg-gray-600 dark:bg-gray-500 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <Icon name="tabler:map-pin" class="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p class="text-sm text-muted">Adresă</p>
+                <p class="font-semibold">{contactInfo.address}</p>
+              </div>
+            </div>
+
+            <!-- Schedule -->
+            <div
+              class="flex items-start gap-4 p-4 bg-gradient-to-r from-gray-100 to-gray-50 dark:from-slate-800 dark:to-slate-700 rounded-xl"
+            >
+              <div
+                class="w-12 h-12 bg-gray-600 dark:bg-gray-500 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <Icon name="tabler:clock" class="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p class="text-sm text-muted">Program</p>
+                <div class="font-semibold whitespace-pre-line">{contactInfo.schedule}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form Side -->
+        <div>
+          <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200 dark:border-gray-700"
+          >
+            <h3 class="text-xl font-bold mb-6">{form.title}</h3>
+            <ContactUs
+              inputs={[
+                {
+                  type: 'text',
+                  name: 'name',
+                  label: 'Nume complet',
+                  placeholder: 'Introduceți numele dvs.',
+                },
+                {
+                  type: 'email',
+                  name: 'email',
+                  label: 'Adresă de email',
+                  placeholder: 'exemplu@email.com',
+                },
+                {
+                  type: 'tel',
+                  name: 'phone',
+                  label: 'Telefon',
+                  placeholder: '0712 345 678',
+                },
+              ]}
+              textarea={{
+                label: 'Mesajul dvs.',
+                name: 'message',
+                placeholder: 'Descrieți motivul contactării sau terapia care vă interesează...',
+                rows: 5,
+              }}
+              disclaimer={{
+                label: 'Sunt de acord cu prelucrarea datelor personale conform politicii de confidențialitate.',
+              }}
+              button={form.submitButtonText}
+              description="Vom răspunde în cel mai scurt timp posibil, de obicei în aceeași zi lucrătoare."
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Google Maps -->
+  <section class="py-12 bg-gray-50 dark:bg-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold mb-2">Locație Cabinet</h2>
+        <p class="text-muted">{contactInfo.address}</p>
+      </div>
+      <div class="rounded-2xl overflow-hidden shadow-lg h-[400px]">
+        <iframe
+          src={contactInfo.googleMapsUrl}
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Locație cabinet terapii energetice"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <FAQs
+    title="Întrebări Frecvente"
+    subtitle="Răspunsuri la cele mai comune întrebări despre programări și ședințe"
+    tagline="FAQ"
+    items={[
+      {
+        title: 'Cum pot programa o ședință?',
+        description:
+          'Puteți programa o ședință telefonic la numărul ' +
+          contactInfo.phone +
+          ', prin WhatsApp, sau completând formularul de contact de pe această pagină. Vom confirma programarea în cel mai scurt timp.',
+      },
+      {
+        title: 'Care este durata unei ședințe?',
+        description:
+          'Durata variază în funcție de terapia aleasă, de la 30 de minute până la 90 de minute. Prima ședință poate dura puțin mai mult pentru evaluarea inițială.',
+      },
+      {
+        title: 'Trebuie să vin cu o problemă specifică?',
+        description:
+          'Nu neapărat. Terapiile energetice sunt benefice atât pentru tratarea unor probleme specifice, cât și pentru menținerea stării de bine și prevenție.',
+      },
+      {
+        title: 'Cum trebuie să mă pregătesc pentru ședință?',
+        description:
+          'Veniți cu haine confortabile, hidratați-vă bine înainte și după ședință, și încercați să ajungeți relaxați. Evitați mesele copioase cu 1-2 ore înainte.',
+      },
+      {
+        title: 'Cum pot afla mai multe detalii?',
+        description:
+          'Pentru orice întrebări despre terapii, programări sau prețuri, ne puteți contacta telefonic sau prin email. Vom răspunde cu plăcere la toate întrebările dumneavoastră.',
+      },
+    ]}
+    classes={{ container: 'max-w-4xl' }}
+  />
+</Layout>

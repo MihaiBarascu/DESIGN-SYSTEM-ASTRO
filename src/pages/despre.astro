@@ -1,0 +1,346 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Content from '~/components/widgets/Content.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Stats from '~/components/widgets/Stats.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+
+// Import editable content from Pages CMS JSON
+import despreData from '~/data/pages/despre.json';
+import contactData from '~/data/pages/contact.json';
+
+// Extract data from JSON for easy access
+const { hero, story, values } = despreData;
+
+// Metadata for SEO
+const metadata = {
+  title: 'Despre Noi - Casa Perfecta | Agenție Imobiliară București',
+  description: hero.subtitle,
+};
+
+// Serviciile oferite
+const servicii = [
+  {
+    title: 'Vânzări Imobiliare',
+    description: 'Te ajutăm să vinzi proprietatea la cel mai bun preț, cu promovare profesională și negociere expertă.',
+    icon: 'tabler:home-dollar',
+  },
+  {
+    title: 'Achiziții Imobiliare',
+    description: 'Găsim proprietatea perfectă pentru tine, verificăm actele și te ghidăm în tot procesul de achiziție.',
+    icon: 'tabler:building-estate',
+  },
+  {
+    title: 'Închirieri',
+    description: 'Intermediem închirieri sigure, cu contracte clare și verificarea riguroasă a chiriașilor.',
+    icon: 'tabler:key',
+  },
+  {
+    title: 'Evaluări Imobiliare',
+    description: 'Oferim evaluări profesionale bazate pe piață pentru a stabili prețul corect al proprietății tale.',
+    icon: 'tabler:calculator',
+  },
+  {
+    title: 'Consultanță Juridică',
+    description: 'Echipa noastră de avocați verifică toate actele și asigură o tranzacție legală și sigură.',
+    icon: 'tabler:scale',
+  },
+  {
+    title: 'Management Proprietăți',
+    description: 'Administrăm proprietățile închiriate: găsim chiriași, colectăm chirie, rezolvăm probleme.',
+    icon: 'tabler:building-community',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Section -->
+  <Hero
+    tagline={hero.tagline}
+    title={hero.title}
+    subtitle={hero.subtitle}
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Contactează-ne',
+        href: '/contact',
+        icon: 'tabler:phone',
+      },
+      {
+        variant: 'secondary',
+        text: 'Vezi proprietăți',
+        href: '/proprietati',
+        icon: 'tabler:arrow-right',
+      },
+    ]}
+    image={{
+      src: '~/assets/images/hero/hero-2.jpg',
+      alt: 'Echipa Casa Perfecta',
+    }}
+  />
+
+  <!-- Stats Section -->
+  <Stats
+    stats={[
+      { title: 'Ani Experiență', amount: '15+' },
+      { title: 'Clienți Mulțumiți', amount: '2000+' },
+      { title: 'Proprietăți Vândute', amount: '1500+' },
+      { title: 'Agenți Profesioniști', amount: '12' },
+    ]}
+  />
+
+  <!-- Story Section -->
+  <section class="py-16 md:py-24 bg-white dark:bg-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="md:flex gap-12 items-center">
+        <!-- Content -->
+        <div class="md:w-2/3">
+          <p class="text-sm text-primary font-bold tracking-wide uppercase mb-2">{story.tagline}</p>
+          <h2 class="text-3xl md:text-4xl font-bold mb-6">{story.title}</h2>
+
+          <div
+            class="space-y-4 text-muted text-lg"
+            set:html={story.content
+              .split('\n\n')
+              .map((p) => `<p>${p}</p>`)
+              .join('')}
+          />
+        </div>
+        <!-- Image -->
+        <div class="md:w-1/3 mt-8 md:mt-0">
+          <img
+            src="/images/about-team.jpg"
+            alt={story.title}
+            class="rounded-2xl shadow-xl w-full"
+            width="400"
+            height="500"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="py-16 md:py-24 bg-gray-50 dark:bg-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <p class="text-sm text-primary font-bold tracking-wide uppercase mb-2">Valorile Noastre</p>
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">{values.title}</h2>
+        <p class="text-muted max-w-2xl mx-auto">
+          {values.subtitle}
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          values.items.map((value) => (
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-primary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 class="font-bold text-lg mb-2">{value.title}</h3>
+              <p class="text-muted">{value.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <Features2
+    title="Serviciile Noastre"
+    subtitle="Tot ce ai nevoie pentru o tranzacție imobiliară de succes"
+    items={servicii}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-white dark:bg-slate-900"></div>
+    </Fragment>
+  </Features2>
+
+  <!-- Why Choose Us -->
+  <Content
+    isReversed
+    tagline="De ce noi?"
+    title="Experiență și profesionalism"
+    subtitle="Casa Perfectă - partenerul tău de încredere în imobiliare"
+    items={[
+      {
+        title: 'Experiență de 15+ ani',
+        description: 'Cunoaștem piața imobiliară din București și împrejurimi în detaliu.',
+        icon: 'tabler:award',
+      },
+      {
+        title: 'Transparență totală',
+        description: 'Comunicare clară, fără surprize, prețuri corecte și oneste.',
+        icon: 'tabler:eye',
+      },
+      {
+        title: 'Suport complet',
+        description: 'Te însoțim de la prima vizită până la semnarea actelor.',
+        icon: 'tabler:heart-handshake',
+      },
+    ]}
+    image={{
+      src: '~/assets/images/hero/hero-1.jpg',
+      alt: 'Servicii imobiliare',
+    }}
+  >
+    <Fragment slot="content">
+      <p class="text-muted">
+        Cu peste 15 ani de experiență pe piața imobiliară din București, am ajutat mii de clienți să găsească sau să
+        vândă proprietatea perfectă. Echipa noastră de profesioniști este dedicată să ofere servicii de cea mai înaltă
+        calitate.
+      </p>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-gray-50 dark:bg-slate-800"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Location Section -->
+  <section class="py-16 md:py-24 bg-white dark:bg-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="md:flex gap-12 items-center">
+        <div class="md:w-1/2 mb-8 md:mb-0">
+          <p class="text-sm text-primary font-bold tracking-wide uppercase mb-2">Sediul Nostru</p>
+          <h2 class="text-3xl md:text-4xl font-bold mb-6">Vizitează-ne în București</h2>
+
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-primary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Adresă</h3>
+                <p class="text-muted">{contactData.contactInfo.address}</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-primary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Program</h3>
+                <div class="text-muted whitespace-pre-line">{contactData.contactInfo.schedule}</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-primary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Contact</h3>
+                <p class="text-muted">Telefon: {contactData.contactInfo.phone}</p>
+                <p class="text-muted">Email: {contactData.contactInfo.email}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:w-1/2">
+          <div class="bg-gray-100 dark:bg-slate-800 rounded-2xl overflow-hidden h-80">
+            <iframe
+              src={contactData.contactInfo.googleMapsUrl}
+              width="100%"
+              height="100%"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="w-full h-full"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <CallToAction
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Solicită o evaluare gratuită',
+        href: '/contact',
+        icon: 'tabler:calculator',
+      },
+      {
+        variant: 'secondary',
+        text: `Sună: ${contactData.contactInfo.phone}`,
+        href: `tel:${contactData.contactInfo.phone}`,
+        icon: 'tabler:phone',
+      },
+    ]}
+  >
+    <Fragment slot="title">Pregătit să vinzi sau să cumperi?</Fragment>
+
+    <Fragment slot="subtitle">
+      <span class="block mb-2 text-white/90">
+        Contactează-ne pentru o consultație gratuită. Agenții noștri sunt gata să te ajute să găsești proprietatea
+        perfectă sau să vinzi la cel mai bun preț.
+      </span>
+      <span class="text-sm text-gray-300">
+        <strong class="text-primary">Evaluare gratuită pentru proprietăți din București și Ilfov.</strong>
+      </span>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-secondary dark:bg-slate-900"></div>
+    </Fragment>
+  </CallToAction>
+</Layout>

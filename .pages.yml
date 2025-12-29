@@ -1,0 +1,812 @@
+# Pages CMS Configuration - Agentie Imobiliara
+# Documentatie: docs/PAGES-CMS.md
+# App: https://app.pagescms.org
+
+# ============================================
+# MEDIA - Unde se salveaza imaginile
+# ============================================
+media:
+  - name: images
+    label: Imagini
+    input: src/assets/images
+    output: ~/assets/images
+    categories: [image]
+    extensions: [jpg, jpeg, png, webp, avif, svg]
+
+# ============================================
+# COMPONENTS - Campuri reutilizabile
+# ============================================
+components:
+  # SEO metadata pentru pagini
+  seo:
+    label: SEO
+    type: object
+    fields:
+      - name: metaTitle
+        label: Meta Title
+        type: string
+        description: 'Titlu pentru Google (max 60 caractere)'
+      - name: metaDescription
+        label: Meta Description
+        type: text
+        description: 'Descriere pentru Google (max 160 caractere)'
+      - name: ogImage
+        label: Imagine Social Media
+        type: image
+        description: 'Imagine pentru Facebook/LinkedIn sharing'
+
+  # Contact info reutilizabil
+  contactInfo:
+    label: Contact
+    type: object
+    fields:
+      - name: phone
+        label: Telefon
+        type: string
+      - name: email
+        label: Email
+        type: string
+        pattern:
+          regex: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+          message: 'Introduceti un email valid'
+      - name: whatsapp
+        label: WhatsApp
+        type: string
+        description: 'Numar cu prefix international (ex: +40123456789)'
+
+# ============================================
+# CONTENT - Ce poate fi editat
+# ============================================
+content:
+  # ------------------------------------------
+  # PROPRIETATI - Listari imobiliare
+  # ------------------------------------------
+  - name: proprietati
+    label: Proprietati
+    type: collection
+    path: src/data/proprietati
+    format: yaml-frontmatter
+    filename: '{fields.slug}.md'
+    view:
+      fields: [title, propertyType, price, zone, status, published]
+      primary: title
+      sort: [price, zone]
+      default:
+        sort: price
+        order: desc
+    fields:
+      - name: title
+        label: Titlu Proprietate
+        type: string
+        required: true
+        description: 'Ex: Apartament 3 Camere Drumul Taberei'
+
+      - name: slug
+        label: URL Slug
+        type: string
+        required: true
+        description: 'URL-ul paginii (ex: apartament-3-camere-drumul-taberei)'
+
+      - name: description
+        label: Descriere scurta
+        type: text
+        required: true
+        description: 'Apare in lista si in Google (max 160 caractere)'
+
+      - name: excerpt
+        label: Rezumat
+        type: string
+        description: 'Text scurt pentru card-uri'
+
+      - name: propertyType
+        label: Tip Proprietate
+        type: select
+        required: true
+        options:
+          values:
+            - value: apartament
+              label: Apartament
+            - value: casa
+              label: Casa / Vila
+            - value: teren
+              label: Teren
+            - value: comercial
+              label: Spatiu Comercial
+
+      - name: transactionType
+        label: Tip Tranzactie
+        type: select
+        required: true
+        options:
+          values:
+            - value: vanzare
+              label: Vanzare
+            - value: inchiriere
+              label: Inchiriere
+
+      - name: price
+        label: Pret (EUR)
+        type: number
+        required: true
+        options:
+          min: 0
+          step: 1000
+
+      - name: pricePerSqm
+        label: Pret/mp (EUR)
+        type: number
+        options:
+          min: 0
+
+      - name: rooms
+        label: Numar Camere
+        type: number
+        options:
+          min: 1
+          max: 20
+
+      - name: bathrooms
+        label: Numar Bai
+        type: number
+        options:
+          min: 1
+          max: 10
+
+      - name: surface
+        label: Suprafata Utila (mp)
+        type: number
+        options:
+          min: 10
+
+      - name: surfaceTotal
+        label: Suprafata Totala (mp)
+        type: number
+
+      - name: landArea
+        label: Suprafata Teren (mp)
+        type: number
+        description: 'Pentru case si terenuri'
+
+      - name: floor
+        label: Etaj
+        type: number
+        options:
+          min: 0
+
+      - name: totalFloors
+        label: Numar Total Etaje
+        type: number
+
+      - name: yearBuilt
+        label: An Constructie
+        type: number
+        options:
+          min: 1900
+          max: 2030
+
+      - name: zone
+        label: Zona
+        type: string
+        required: true
+        description: 'Ex: Drumul Taberei, Pipera, Baneasa'
+
+      - name: address
+        label: Adresa
+        type: string
+        description: 'Adresa completa (optional)'
+
+      - name: city
+        label: Oras
+        type: string
+        default: 'Bucuresti'
+
+      - name: image
+        label: Imagine Principala
+        type: image
+        required: true
+
+      - name: gallery
+        label: Galerie Foto
+        type: image
+        list:
+          max: 20
+        description: 'Imagini aditionale (max 20)'
+
+      - name: features
+        label: Caracteristici
+        type: string
+        list:
+          max: 15
+        description: 'Ex: Centrala proprie, Aer conditionat'
+
+      - name: amenities
+        label: Facilitati Zona
+        type: string
+        list:
+          max: 10
+        description: 'Ex: Metrou, Scoala, Supermarket'
+
+      - name: status
+        label: Status
+        type: select
+        required: true
+        options:
+          values:
+            - value: disponibil
+              label: Disponibil
+            - value: rezervat
+              label: Rezervat
+            - value: vandut
+              label: Vandut
+            - value: inchiriat
+              label: Inchiriat
+
+      - name: featured
+        label: Proprietate Recomandata
+        type: boolean
+        default: false
+        description: 'Afiseaza pe homepage'
+
+      - name: published
+        label: Publicat
+        type: boolean
+        default: true
+
+      - name: publishDate
+        label: Data Publicarii
+        type: date
+        default: 'now'
+
+      - name: seo
+        component: seo
+
+      - name: body
+        label: Descriere Detaliata
+        type: rich-text
+        description: 'Descriere completa cu formatare'
+
+  # ------------------------------------------
+  # SERVICII - Servicii imobiliare
+  # ------------------------------------------
+  - name: servicii
+    label: Servicii
+    type: collection
+    path: src/data/servicii
+    format: yaml-frontmatter
+    filename: '{fields.slug}.md'
+    view:
+      fields: [title, published]
+      primary: title
+    fields:
+      - name: title
+        label: Nume Serviciu
+        type: string
+        required: true
+        description: 'Ex: Vanzari Imobiliare, Evaluari'
+
+      - name: slug
+        label: URL Slug
+        type: string
+        required: true
+
+      - name: subtitle
+        label: Subtitlu
+        type: string
+
+      - name: description
+        label: Descriere Scurta
+        type: text
+        required: true
+
+      - name: icon
+        label: Icon
+        type: select
+        options:
+          values:
+            - value: tabler:home-dollar
+              label: Casa cu Pret
+            - value: tabler:key
+              label: Cheie
+            - value: tabler:chart-bar
+              label: Grafic
+            - value: tabler:users
+              label: Utilizatori
+            - value: tabler:building
+              label: Cladire
+            - value: tabler:search
+              label: Cautare
+
+      - name: image
+        label: Imagine
+        type: image
+
+      - name: features
+        label: Ce Include
+        type: string
+        list:
+          max: 10
+
+      - name: benefits
+        label: Beneficii
+        type: string
+        list:
+          max: 10
+
+      - name: featured
+        label: Serviciu Recomandat
+        type: boolean
+        default: false
+
+      - name: published
+        label: Publicat
+        type: boolean
+        default: true
+
+      - name: publishDate
+        label: Data Publicarii
+        type: date
+        default: 'now'
+
+      - name: seo
+        component: seo
+
+      - name: body
+        label: Continut Detaliat
+        type: rich-text
+
+  # ------------------------------------------
+  # TESTIMONIALE - Recenzii clienti
+  # ------------------------------------------
+  - name: testimoniale
+    label: Testimoniale
+    type: collection
+    path: src/data/testimoniale
+    format: yaml-frontmatter
+    filename: '{fields.publishDate}-{fields.slug}.md'
+    view:
+      fields: [name, propertyType, rating, published]
+      primary: name
+      sort: [publishDate, rating]
+      default:
+        sort: publishDate
+        order: desc
+    fields:
+      - name: name
+        label: Nume Client
+        type: string
+        required: true
+        description: 'Numele complet sau initialele (ex: Ion P.)'
+
+      - name: slug
+        label: Slug (URL)
+        type: string
+
+      - name: avatar
+        label: Foto Client
+        type: image
+
+      - name: location
+        label: Localitate
+        type: string
+
+      - name: profession
+        label: Profesie
+        type: string
+
+      - name: propertyType
+        label: Tip Tranzactie
+        type: select
+        options:
+          values:
+            - Cumparare Apartament
+            - Cumparare Casa
+            - Vanzare Apartament
+            - Vanzare Casa
+            - Inchiriere
+            - Evaluare Proprietate
+            - Consultanta
+
+      - name: rating
+        label: Rating (1-5 stele)
+        type: number
+        options:
+          min: 1
+          max: 5
+          step: 1
+        default: 5
+
+      - name: youtubeId
+        label: YouTube Video ID (optional)
+        type: string
+
+      - name: featured
+        label: Testimonial Recomandat
+        type: boolean
+        default: false
+
+      - name: published
+        label: Publicat
+        type: boolean
+        default: true
+
+      - name: publishDate
+        label: Data
+        type: date
+        default: 'now'
+
+      - name: body
+        label: Testimonial
+        type: rich-text
+        required: true
+
+  # ------------------------------------------
+  # BLOG - Articole imobiliare
+  # ------------------------------------------
+  - name: blog
+    label: Blog
+    type: collection
+    path: src/data/post
+    format: yaml-frontmatter
+    filename: '{fields.slug}.md'
+    view:
+      fields: [title, category, publishDate, draft]
+      primary: title
+      sort: [publishDate, title]
+      default:
+        sort: publishDate
+        order: desc
+    fields:
+      - name: title
+        label: Titlu
+        type: string
+        required: true
+
+      - name: slug
+        label: URL Slug
+        type: string
+        required: true
+
+      - name: excerpt
+        label: Rezumat
+        type: text
+
+      - name: image
+        label: Imagine Principala
+        type: image
+
+      - name: category
+        label: Categorie
+        type: select
+        options:
+          values:
+            - value: sfaturi
+              label: Sfaturi Cumparatori
+            - value: piata
+              label: Piata Imobiliara
+            - value: investitii
+              label: Investitii
+            - value: legislatie
+              label: Legislatie
+            - value: noutati
+              label: Noutati
+          creatable: true
+
+      - name: tags
+        label: Tag-uri
+        type: string
+        list:
+          max: 5
+
+      - name: author
+        label: Autor
+        type: string
+        default: 'Echipa Casa Perfecta'
+
+      - name: draft
+        label: Draft (nepublicat)
+        type: boolean
+        default: false
+
+      - name: publishDate
+        label: Data Publicarii
+        type: date
+        default: 'now'
+
+      - name: updateDate
+        label: Data Actualizarii
+        type: date
+
+      - name: seo
+        component: seo
+
+      - name: body
+        label: Continut
+        type: rich-text
+
+  # ------------------------------------------
+  # HOMEPAGE - Pagina principala editabila
+  # ------------------------------------------
+  - name: homepage
+    label: Pagina Principala
+    type: file
+    path: src/data/pages/homepage.json
+    format: json
+    fields:
+      - name: metadata
+        label: SEO & Metadata
+        type: object
+        fields:
+          - { name: title, label: Titlu Pagina (SEO), type: string, required: true }
+          - { name: description, label: Descriere (SEO), type: text }
+
+      - name: hero
+        label: Sectiunea Hero
+        type: object
+        fields:
+          - { name: tagline, label: Tagline, type: string }
+          - { name: title, label: Titlu Principal, type: string, required: true }
+          - { name: subtitle, label: Subtitlu, type: text }
+          - name: primaryButton
+            label: Buton Principal
+            type: object
+            fields:
+              - { name: text, label: Text, type: string }
+              - { name: url, label: URL, type: string }
+          - name: secondaryButton
+            label: Buton Secundar
+            type: object
+            fields:
+              - { name: text, label: Text, type: string }
+              - { name: url, label: URL, type: string }
+
+      - name: introSection
+        label: Sectiunea Introducere
+        type: object
+        fields:
+          - { name: h1, label: Titlu H1 Principal, type: string, required: true }
+          - { name: h4, label: Subtitlu H4 (servicii), type: string }
+
+      - name: proprietatiGridSection
+        label: Grid Proprietati (titlu si descriere)
+        type: object
+        fields:
+          - { name: title, label: Titlu Sectiune, type: string }
+          - { name: description, label: Descriere, type: text }
+
+      - name: aboutSection
+        label: Sectiunea Despre
+        type: object
+        fields:
+          - { name: tagline, label: Tagline, type: string }
+          - { name: title, label: Titlu, type: string }
+          - { name: content, label: Continut, type: rich-text }
+          - { name: buttonText, label: Text Buton, type: string }
+          - { name: buttonUrl, label: URL Buton, type: string }
+
+      - name: serviciiSection
+        label: Sectiunea Servicii
+        type: object
+        fields:
+          - { name: title, label: Titlu, type: string }
+          - name: items
+            label: Servicii
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titlu Serviciu, type: string }
+              - { name: description, label: Descriere, type: text }
+              - { name: icon, label: Icon, type: string }
+
+      - name: steps
+        label: Pasi - Cum Functioneaza
+        type: object
+        fields:
+          - { name: tagline, label: Tagline, type: string }
+          - { name: title, label: Titlu, type: string }
+          - { name: subtitle, label: Subtitlu, type: text }
+          - name: items
+            label: Pasi
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titlu Pas, type: string }
+              - { name: description, label: Descriere, type: text }
+              - { name: icon, label: Icon, type: string }
+
+      - name: benefits
+        label: Sectiunea Beneficii
+        type: object
+        fields:
+          - { name: tagline, label: Tagline, type: string }
+          - { name: title, label: Titlu, type: string }
+          - { name: subtitle, label: Subtitlu, type: text }
+          - name: items
+            label: Beneficii
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titlu, type: string }
+              - { name: description, label: Descriere, type: text }
+              - name: icon
+                label: Icon Tabler
+                type: select
+                options:
+                  values:
+                    - { value: 'tabler:award', label: 'Premiu' }
+                    - { value: 'tabler:building', label: 'Cladire' }
+                    - { value: 'tabler:shield-check', label: 'Siguranta' }
+                    - { value: 'tabler:headset', label: 'Suport' }
+                    - { value: 'tabler:users', label: 'Echipa' }
+                    - { value: 'tabler:home', label: 'Casa' }
+
+      - name: stats
+        label: Statistici
+        type: object
+        list: true
+        fields:
+          - { name: value, label: Valoare, type: string }
+          - { name: label, label: Label, type: string }
+
+      - name: beneficiiSection
+        label: Sectiunea Beneficii Detaliate
+        type: object
+        fields:
+          - { name: tagline, label: Tagline, type: string }
+          - { name: title, label: Titlu, type: string }
+          - { name: highlight, label: Text Evidentiat, type: string }
+          - { name: description, label: Descriere, type: text }
+          - name: items
+            label: Lista Beneficii
+            type: string
+            list: true
+
+      - name: ctaSection
+        label: Sectiunea CTA Final
+        type: object
+        fields:
+          - { name: title, label: Titlu, type: string }
+          - { name: subtitle, label: Subtitlu, type: text }
+          - { name: buttonText, label: Text Buton, type: string }
+          - { name: buttonUrl, label: URL Buton, type: string }
+          - { name: phone, label: Numar Telefon, type: string }
+
+  # ------------------------------------------
+  # PAGINA CONTACT
+  # ------------------------------------------
+  - name: contact
+    label: Pagina Contact
+    type: file
+    path: src/data/pages/contact.json
+    format: json
+    fields:
+      - name: hero
+        label: Sectiunea Hero
+        type: object
+        fields:
+          - { name: tagline, label: Tagline, type: string }
+          - { name: title, label: Titlu, type: string }
+          - { name: subtitle, label: Subtitlu, type: text }
+
+      - name: contactInfo
+        label: Informatii Contact
+        type: object
+        fields:
+          - { name: phone, label: Telefon, type: string }
+          - { name: email, label: Email, type: string }
+          - { name: whatsapp, label: WhatsApp, type: string }
+          - { name: address, label: Adresa Completa, type: text }
+          - { name: schedule, label: Program, type: text }
+          - { name: googleMapsUrl, label: Google Maps Embed URL, type: string }
+
+      - name: form
+        label: Setari Formular
+        type: object
+        fields:
+          - { name: title, label: Titlu Formular, type: string }
+          - { name: submitButtonText, label: Text Buton Trimite, type: string }
+          - { name: successMessage, label: Mesaj Succes, type: text }
+
+  # ------------------------------------------
+  # SETARI SITE
+  # ------------------------------------------
+  - name: settings
+    label: Setari Site
+    type: file
+    path: src/data/settings/site.json
+    format: json
+    fields:
+      - name: siteName
+        label: Nume Site
+        type: string
+        default: 'Casa Perfecta'
+
+      - name: tagline
+        label: Slogan
+        type: string
+        default: 'Gasim casa visurilor tale'
+
+      - name: description
+        label: Descriere Site
+        type: text
+
+      - name: agencyName
+        label: Nume Agentie
+        type: string
+
+      - name: agencyTitle
+        label: Titlu/Certificari
+        type: string
+
+      - name: agencyBio
+        label: Despre Agentie
+        type: text
+
+      - name: agencyImage
+        label: Logo Agentie
+        type: image
+
+      - name: contact
+        label: Informatii Contact
+        component: contactInfo
+
+      - name: address
+        label: Adresa Sediu
+        type: object
+        fields:
+          - name: street
+            label: Strada
+            type: string
+          - name: city
+            label: Oras
+            type: string
+          - name: county
+            label: Sector/Judet
+            type: string
+          - name: postalCode
+            label: Cod Postal
+            type: string
+
+      - name: schedule
+        label: Program
+        type: object
+        fields:
+          - name: weekdays
+            label: Luni - Vineri
+            type: string
+            default: '09:00 - 18:00'
+          - name: saturday
+            label: Sambata
+            type: string
+            default: '10:00 - 14:00'
+          - name: sunday
+            label: Duminica
+            type: string
+            default: 'Inchis'
+
+      - name: socialMedia
+        label: Social Media
+        type: object
+        fields:
+          - name: facebook
+            label: Facebook URL
+            type: string
+          - name: instagram
+            label: Instagram URL
+            type: string
+          - name: youtube
+            label: YouTube URL
+            type: string
+          - name: tiktok
+            label: TikTok URL
+            type: string
+
+      - name: googleMapsEmbed
+        label: Google Maps Embed URL
+        type: string
+
+# ============================================
+# SETTINGS - Configuratie Pages CMS
+# ============================================
+settings:
+  content:
+    merge: true

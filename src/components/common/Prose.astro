@@ -1,0 +1,62 @@
+---
+/**
+ * Prose Component - Official Astro Recipe
+ * =========================================
+ * Wraps markdown content with Tailwind Typography styling.
+ *
+ * Reference: https://docs.astro.build/en/recipes/tailwind-rendered-markdown/
+ * Tailwind Typography: https://tailwindcss.com/docs/typography-plugin
+ *
+ * Usage:
+ * ```astro
+ * import Prose from '~/components/common/Prose.astro';
+ * import { render } from 'astro:content';
+ *
+ * const { Content } = await render(entry);
+ * ---
+ * <Prose>
+ *   <Content />
+ * </Prose>
+ * ```
+ */
+
+interface Props {
+  /** Size variant: 'base' | 'lg' | 'xl' | '2xl' */
+  size?: 'base' | 'lg' | 'xl' | '2xl';
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { size = 'lg', class: className = '' } = Astro.props;
+
+// Map size to Tailwind prose size classes
+const sizeClasses: Record<string, string> = {
+  base: 'prose',
+  lg: 'prose prose-lg',
+  xl: 'prose prose-xl',
+  '2xl': 'prose prose-2xl',
+};
+---
+
+<div
+  class:list={[
+    sizeClasses[size],
+    'dark:prose-invert',
+    'max-w-none',
+    // Customize heading styles to match site design
+    'prose-headings:font-heading prose-headings:font-bold',
+    'prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4',
+    'prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3',
+    // Links styled with primary color
+    'prose-a:text-primary prose-a:no-underline hover:prose-a:underline',
+    // Paragraphs
+    'prose-p:text-muted prose-p:leading-relaxed',
+    // Lists
+    'prose-li:text-muted',
+    // Images rounded
+    'prose-img:rounded-xl prose-img:shadow-lg',
+    className,
+  ]}
+>
+  <slot />
+</div>

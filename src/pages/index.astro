@@ -1,0 +1,320 @@
+---
+// ============================================
+// HOMEPAGE - Casa Perfecta - Agentie Imobiliara
+// Design inspired by Villa Agency template
+// ============================================
+
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Features from '~/components/widgets/Features.astro';
+import Stats from '~/components/widgets/Stats.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Contact from '~/components/widgets/Contact.astro';
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+
+import { getCollection } from 'astro:content';
+import { findImage } from '~/utils/images';
+
+// Data imports
+import homepageData from '~/data/pages/homepage.json';
+import siteSettings from '~/data/settings/site.json';
+
+// Hero images
+import heroImage from '~/assets/images/hero/hero-1.jpg';
+
+// Get featured properties from collection
+const allProprietati = await getCollection('proprietati');
+const featuredProprietati = allProprietati
+  .filter((p) => p.data.published !== false && p.data.featured === true)
+  .slice(0, 6);
+
+// Prepare images
+const proprietatiWithImages = await Promise.all(
+  featuredProprietati.map(async (prop) => ({
+    ...prop,
+    resolvedImage: await findImage(prop.data.image),
+  }))
+);
+
+// Extract data from JSON
+const { hero, stats, serviciiSection, steps, benefits, ctaSection, proprietatiGridSection } = homepageData;
+
+const metadata = {
+  title: homepageData.metadata?.title || 'Casa Perfecta - Agentie Imobiliara Bucuresti',
+  description: homepageData.metadata?.description || 'Gaseste casa visurilor tale cu Casa Perfecta!',
+  ignoreTitleTemplate: true,
+};
+
+// Format price helper
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('ro-RO').format(price);
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- ==================== HERO SECTION ==================== -->
+  <Hero
+    tagline={hero?.tagline}
+    title={hero?.title}
+    subtitle={hero?.subtitle}
+    actions={[
+      {
+        variant: 'primary',
+        text: hero?.primaryButton?.text || 'Vezi Proprietatile',
+        href: hero?.primaryButton?.url || '/proprietati',
+        icon: 'tabler:building',
+      },
+      {
+        variant: 'secondary',
+        text: hero?.secondaryButton?.text || 'Programeaza o Vizita',
+        href: hero?.secondaryButton?.url || '/contact',
+        icon: 'tabler:calendar',
+      },
+    ]}
+    image={{
+      src: heroImage,
+      alt: 'Casa Perfecta - Agentie Imobiliara Bucuresti',
+    }}
+  />
+
+  <!-- ==================== STATS SECTION ==================== -->
+  <Stats
+    stats={stats?.map((stat: { value: string; label: string }) => ({
+      amount: stat.value,
+      title: stat.label,
+    })) || [
+      { amount: '500+', title: 'Proprietati Disponibile' },
+      { amount: '15+', title: 'Ani de Experienta' },
+      { amount: '1200+', title: 'Clienti Multumiti' },
+      { amount: '20+', title: 'Agenti Certificati' },
+    ]}
+    classes={{ container: 'bg-primary text-white' }}
+  />
+
+  <!-- ==================== SERVICII SECTION ==================== -->
+  <Features
+    id="servicii"
+    tagline={serviciiSection?.tagline || 'Ce Oferim'}
+    title={serviciiSection?.title || 'Serviciile Noastre'}
+    subtitle="Te ajutam in fiecare etapa a tranzactiei imobiliare, de la prima vizionare pana la predarea cheilor."
+    items={serviciiSection?.items?.map((item: { title: string; description: string; icon: string }) => ({
+      title: item.title,
+      description: item.description,
+      icon: item.icon || 'tabler:check',
+    })) || []}
+    columns={2}
+  />
+
+  <!-- ==================== PROPRIETATI FEATURED ==================== -->
+  <section id="proprietati" class="py-16 md:py-20 bg-gray-50 dark:bg-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <p class="text-primary font-semibold uppercase tracking-wide mb-2">| Proprietati</p>
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+          {proprietatiGridSection?.title || 'Proprietati Disponibile'}
+        </h2>
+        <p class="text-muted max-w-2xl mx-auto">
+          {proprietatiGridSection?.description || 'Descopera selectia noastra de proprietati premium din Bucuresti.'}
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          proprietatiWithImages.length > 0
+            ? proprietatiWithImages.map((prop) => (
+                <div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 property-card">
+                  <a href={`/proprietati/${prop.data.slug}`} class="block">
+                    <div class="relative aspect-[4/3] overflow-hidden">
+                      {prop.resolvedImage && typeof prop.resolvedImage !== 'string' ? (
+                        <Image
+                          src={prop.resolvedImage}
+                          alt={prop.data.title}
+                          class="w-full h-full object-cover"
+                          widths={[400, 600]}
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div class="w-full h-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center">
+                          <Icon name="tabler:home" class="w-16 h-16 text-gray-400" />
+                        </div>
+                      )}
+                      <span class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {prop.data.propertyType}
+                      </span>
+                    </div>
+                  </a>
+                  <div class="p-6">
+                    <div class="text-primary font-bold text-xl mb-2">{formatPrice(prop.data.price)} EUR</div>
+                    <h3 class="font-bold text-lg mb-2 hover:text-primary transition-colors">
+                      <a href={`/proprietati/${prop.data.slug}`}>{prop.data.title}</a>
+                    </h3>
+                    <p class="text-muted text-sm mb-4 flex items-center gap-1">
+                      <Icon name="tabler:map-pin" class="w-4 h-4" />
+                      {prop.data.zone}
+                    </p>
+                    <ul class="grid grid-cols-2 gap-2 text-sm text-muted border-t pt-4">
+                      {prop.data.rooms && (
+                        <li class="flex items-center gap-1">
+                          <Icon name="tabler:bed" class="w-4 h-4" />
+                          {prop.data.rooms} camere
+                        </li>
+                      )}
+                      {prop.data.bathrooms && (
+                        <li class="flex items-center gap-1">
+                          <Icon name="tabler:bath" class="w-4 h-4" />
+                          {prop.data.bathrooms} bai
+                        </li>
+                      )}
+                      {prop.data.surface && (
+                        <li class="flex items-center gap-1">
+                          <Icon name="tabler:dimensions" class="w-4 h-4" />
+                          {prop.data.surface} m²
+                        </li>
+                      )}
+                      {prop.data.floor && (
+                        <li class="flex items-center gap-1">
+                          <Icon name="tabler:building" class="w-4 h-4" />
+                          Etaj {prop.data.floor}
+                        </li>
+                      )}
+                    </ul>
+                    <a
+                      href={`/proprietati/${prop.data.slug}`}
+                      class="mt-4 block text-center bg-secondary hover:bg-secondary/90 text-white py-2 px-4 rounded-lg transition-colors"
+                    >
+                      <Icon name="tabler:calendar" class="w-4 h-4 inline mr-1" />
+                      Programeaza vizita
+                    </a>
+                  </div>
+                </div>
+              ))
+            : /* Fallback static properties if collection is empty */
+              [1, 2, 3, 4, 5, 6].map((i) => (
+                <div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-lg property-card">
+                  <div class="relative aspect-[4/3] bg-gray-200 dark:bg-slate-700 flex items-center justify-center">
+                    <Icon name="tabler:home" class="w-16 h-16 text-gray-400" />
+                    <span class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm">
+                      Apartament
+                    </span>
+                  </div>
+                  <div class="p-6">
+                    <div class="text-primary font-bold text-xl mb-2">{formatPrice(85000 + i * 15000)} EUR</div>
+                    <h3 class="font-bold text-lg mb-2">Apartament {i + 1} camere zona Centrala</h3>
+                    <p class="text-muted text-sm mb-4 flex items-center gap-1">
+                      <Icon name="tabler:map-pin" class="w-4 h-4" />
+                      Sector {i}, Bucuresti
+                    </p>
+                    <ul class="grid grid-cols-2 gap-2 text-sm text-muted border-t pt-4">
+                      <li class="flex items-center gap-1">
+                        <Icon name="tabler:bed" class="w-4 h-4" />
+                        {i + 1} camere
+                      </li>
+                      <li class="flex items-center gap-1">
+                        <Icon name="tabler:bath" class="w-4 h-4" />
+                        {i} bai
+                      </li>
+                      <li class="flex items-center gap-1">
+                        <Icon name="tabler:dimensions" class="w-4 h-4" />
+                        {50 + i * 20} m²
+                      </li>
+                      <li class="flex items-center gap-1">
+                        <Icon name="tabler:building" class="w-4 h-4" />
+                        Etaj {i + 1}
+                      </li>
+                    </ul>
+                    <a
+                      href="/contact"
+                      class="mt-4 block text-center bg-secondary hover:bg-secondary/90 text-white py-2 px-4 rounded-lg transition-colors"
+                    >
+                      <Icon name="tabler:calendar" class="w-4 h-4 inline mr-1" />
+                      Programeaza vizita
+                    </a>
+                  </div>
+                </div>
+              ))
+        }
+      </div>
+
+      <div class="text-center mt-10">
+        <a
+          href="/proprietati"
+          class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+        >
+          Vezi toate proprietatile
+          <Icon name="tabler:arrow-right" class="w-5 h-5" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CUM FUNCTIONEAZA ==================== -->
+  <Steps
+    id="proces"
+    tagline={steps?.tagline}
+    title={steps?.title}
+    subtitle={steps?.subtitle}
+    items={steps?.items?.map((item: { title: string; description: string; icon: string }) => ({
+      title: item.title,
+      description: item.description,
+      icon: item.icon || 'tabler:check',
+    })) || []}
+  />
+
+  <!-- ==================== BENEFICII ==================== -->
+  <Features
+    id="beneficii"
+    tagline={benefits?.tagline}
+    title={benefits?.title}
+    subtitle={benefits?.subtitle}
+    items={benefits?.items?.map((item: { title: string; description: string; icon: string }) => ({
+      title: item.title,
+      description: item.description,
+      icon: item.icon || 'tabler:check',
+    })) || []}
+    columns={3}
+    classes={{ container: 'bg-gray-50 dark:bg-slate-800' }}
+  />
+
+  <!-- ==================== CONTACT CTA ==================== -->
+  <CallToAction
+    id="contact-cta"
+    title={ctaSection?.title}
+    subtitle={ctaSection?.subtitle}
+    actions={[
+      {
+        variant: 'primary',
+        text: ctaSection?.buttonText || 'Programeaza o vizita',
+        href: ctaSection?.buttonUrl || '/contact',
+        icon: 'tabler:calendar',
+      },
+      {
+        variant: 'secondary',
+        text: `Suna: ${ctaSection?.phone || siteSettings.contact?.phone || '0722 100 200'}`,
+        href: `tel:${ctaSection?.phone || siteSettings.contact?.phone || '0722100200'}`,
+        icon: 'tabler:phone',
+      },
+    ]}
+  />
+
+  <!-- ==================== CONTACT FORM ==================== -->
+  <Contact
+    id="contact"
+    tagline="Contacteaza-ne"
+    title="Scrie-ne un mesaj"
+    subtitle="Completeaza formularul si te vom contacta in cel mai scurt timp posibil."
+    inputs={[
+      { type: 'text', name: 'name', label: 'Nume complet', placeholder: 'Ion Popescu' },
+      { type: 'email', name: 'email', label: 'Email', placeholder: 'ion@exemplu.ro' },
+      { type: 'tel', name: 'phone', label: 'Telefon', placeholder: '0722 123 456' },
+    ]}
+    textarea={{
+      label: 'Mesaj',
+      placeholder: 'Descrie-ne ce tip de proprietate cauti...',
+    }}
+    button="Trimite mesajul"
+  />
+</Layout>

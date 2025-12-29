@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "title": "Casa Perfecta - Agentie Imobiliara Bucuresti | Apartamente, Case, Terenuri",
+    "description": "Gaseste casa visurilor tale cu Casa Perfecta! Agentie imobiliara cu peste 15 ani experienta in Bucuresti. Apartamente, case, terenuri - vanzare si inchiriere."
+  },
+  "hero": {
+    "tagline": "Casa Perfecta - Agentie Imobiliara Bucuresti",
+    "title": "Gaseste casa perfecta pentru familia ta",
+    "subtitle": "Cu o experienta de peste 15 ani pe piata imobiliara din Bucuresti, te ajutam sa gasesti proprietatea ideala. Apartamente, case, terenuri - vanzare si inchiriere.",
+    "primaryButton": {
+      "text": "Vezi Proprietatile",
+      "url": "/proprietati"
+    },
+    "secondaryButton": {
+      "text": "Programeaza o Vizita",
+      "url": "/contact"
+    }
+  },
+  "introSection": {
+    "h1": "Agentie Imobiliara Casa Perfecta - Partenerul Tau de Incredere in Bucuresti",
+    "h4": "VANZARI | INCHIRIERI | EVALUARI | CONSULTANTA IMOBILIARA"
+  },
+  "aboutSection": {
+    "tagline": "Despre Noi",
+    "title": "Casa Perfecta",
+    "content": "Bine ai venit la Casa Perfecta, agentia imobiliara cu traditie in Bucuresti! Suntem o echipa de profesionisti dedicati care inteleg ca achizitia sau inchirierea unei proprietati este una dintre cele mai importante decizii din viata ta. De aceea, oferim servicii personalizate si transparente, pentru a-ti gasi locuinta visurilor tale.",
+    "buttonText": "Afla mai multe despre noi",
+    "buttonUrl": "/despre"
+  },
+  "proprietatiGridSection": {
+    "title": "Proprietati Disponibile",
+    "description": "Descopera selectia noastra de proprietati premium din Bucuresti si imprejurimi. Apartamente moderne, case spatioase, terenuri si spatii comerciale - toate verificate si pregatite pentru tine."
+  },
+  "serviciiSection": {
+    "tagline": "Ce Oferim",
+    "title": "Serviciile Noastre",
+    "items": [
+      {
+        "title": "Vanzari Imobiliare",
+        "description": "Te ajutam sa vinzi proprietatea ta la cel mai bun pret. Evaluare gratuita, fotografii profesionale, promovare pe toate platformele majore si negociere in interesul tau.",
+        "icon": "tabler:home-dollar"
+      },
+      {
+        "title": "Inchirieri",
+        "description": "Gasim chiriasi de incredere pentru proprietatea ta sau te ajutam sa gasesti spatiul perfect pentru inchiriere. Verificam solvabilitatea si gestionam toate formalitatile.",
+        "icon": "tabler:key"
+      },
+      {
+        "title": "Evaluari Proprietati",
+        "description": "Evaluatori autorizati ANEVAR ofera rapoarte de evaluare pentru banci, mosteniri, partaje sau pur si simplu pentru a cunoaste valoarea reala a proprietatii tale.",
+        "icon": "tabler:chart-bar"
+      },
+      {
+        "title": "Consultanta Imobiliara",
+        "description": "Consiliere completa in toate etapele tranzactiei: analiza pietei, verificare acte, asistenta notariala si bancara. Experienta noastra devine avantajul tau.",
+        "icon": "tabler:users"
+      }
+    ]
+  },
+  "steps": {
+    "tagline": "Cum Functioneaza?",
+    "title": "Procesul nostru simplu in 3 pasi",
+    "subtitle": "La Casa Perfecta, facem procesul de achizitie sau inchiriere cat mai simplu si transparent posibil. Iata cum te ajutam:",
+    "items": [
+      {
+        "title": "Spune-ne Ce Cauti",
+        "description": "Completeaza formularul de contact sau suna-ne pentru a ne spune cerintele tale: buget, zona, numar de camere, facilitati dorite.",
+        "icon": "tabler:message-circle"
+      },
+      {
+        "title": "Primesti Propuneri Personalizate",
+        "description": "Echipa noastra selecteaza proprietatile care se potrivesc criteriilor tale si iti trimite o lista personalizata cu optiuni.",
+        "icon": "tabler:list-check"
+      },
+      {
+        "title": "Vizionezi si Alegi",
+        "description": "Programam vizionari la proprietatile care te intereseaza. Dupa ce alegi, te asistam cu toate formalitatile pana la predarea cheilor.",
+        "icon": "tabler:home-check"
+      }
+    ]
+  },
+  "benefits": {
+    "tagline": "De Ce Sa Ne Alegi?",
+    "title": "Avantajele de a lucra cu Casa Perfecta",
+    "subtitle": "Cu peste 15 ani de experienta si sute de clienti multumiti, suntem partenerul ideal pentru orice tranzactie imobiliara.",
+    "items": [
+      {
+        "title": "Experienta Dovedita",
+        "description": "Peste 15 ani pe piata imobiliara din Bucuresti si peste 1200 de tranzactii finalizate cu succes.",
+        "icon": "tabler:award"
+      },
+      {
+        "title": "Baza Mare de Proprietati",
+        "description": "Acces la peste 500 de proprietati verificate, inclusiv oferte exclusive care nu apar pe alte platforme.",
+        "icon": "tabler:building"
+      },
+      {
+        "title": "Transparenta Totala",
+        "description": "Fara costuri ascunse. Iti explicam fiecare pas al procesului si fiecare cost implicat.",
+        "icon": "tabler:shield-check"
+      },
+      {
+        "title": "Suport Complet",
+        "description": "Te asistam de la prima vizionare pana la semnarea actelor la notar si predarea cheilor.",
+        "icon": "tabler:headset"
+      },
+      {
+        "title": "Echipa Profesionista",
+        "description": "Agenti certificati, cu pregatire continua si cunoastere aprofundata a pietei locale.",
+        "icon": "tabler:users"
+      }
+    ]
+  },
+  "stats": [
+    {
+      "value": "500+",
+      "label": "Proprietati Disponibile"
+    },
+    {
+      "value": "15+",
+      "label": "Ani de Experienta"
+    },
+    {
+      "value": "1200+",
+      "label": "Clienti Multumiti"
+    },
+    {
+      "value": "20+",
+      "label": "Agenti Certificati"
+    }
+  ],
+  "beneficiiSection": {
+    "tagline": "Beneficii",
+    "title": "De Ce Clientii Ne Aleg",
+    "highlight": "Servicii complete pentru o tranzactie fara griji.",
+    "description": "Fie ca vrei sa cumperi, sa vinzi sau sa inchiriezi, echipa Casa Perfecta iti sta la dispozitie cu expertiza si dedicare.",
+    "items": [
+      "Evaluare gratuita a proprietatii tale",
+      "Fotografii profesionale si tururi virtuale",
+      "Promovare pe toate platformele imobiliare majore",
+      "Verificarea actelor si a situatiei juridice",
+      "Asistenta la negociere pentru cel mai bun pret",
+      "Suport in obtinerea creditului ipotecar",
+      "Programari flexibile, inclusiv in weekend"
+    ]
+  },
+  "ctaSection": {
+    "title": "Esti gata sa gasesti casa visurilor tale?",
+    "subtitle": "Contacteaza-ne acum pentru o consultanta gratuita. Echipa noastra de experti te asteapta sa te ajute sa faci cea mai buna alegere imobiliara.",
+    "buttonText": "Programeaza o vizita",
+    "buttonUrl": "/contact",
+    "phone": "0722100200"
+  }
+}

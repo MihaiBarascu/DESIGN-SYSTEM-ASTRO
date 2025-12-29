@@ -1,0 +1,266 @@
+---
+/**
+ * AGENTIE_IMOBILIARE Header
+ * Inspired by templatemo_591_villa_agency
+ * Elegant real estate header with Schedule Visit CTA
+ */
+import { Icon } from 'astro-icon/components';
+import ToggleMenu from '~/components/common/ToggleMenu.astro';
+import ToggleTheme from '~/components/common/ToggleTheme.astro';
+
+import { getHomePermalink } from '~/utils/permalinks';
+import { trimSlash } from '~/utils/permalinks';
+import type { CallToAction } from '~/types';
+
+interface Link {
+  text?: string;
+  href?: string;
+  ariaLabel?: string;
+  icon?: string;
+}
+
+interface MenuLink extends Link {
+  links?: Array<MenuLink>;
+}
+
+export interface Props {
+  id?: string;
+  links?: Array<MenuLink>;
+  actions?: Array<CallToAction>;
+  isSticky?: boolean;
+  isDark?: boolean;
+  showToggleTheme?: boolean;
+  /** Header style variant: solid | transparent | glass | floating | transparent-floating */
+  variant?: 'solid' | 'transparent' | 'glass' | 'floating' | 'transparent-floating';
+}
+
+const {
+  id = 'header',
+  links = [],
+  actions = [],
+  isSticky = true,
+  isDark = false,
+  showToggleTheme = false,
+  variant = 'solid',
+} = Astro.props;
+
+// Map variant to CSS class
+const variantClass = variant ? `header-${variant}` : 'header-solid';
+
+const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+---
+
+<header
+  id={id}
+  class:list={[
+    'top-0 z-40 w-full transition-all duration-300',
+    variantClass,
+    {
+      sticky: isSticky && variant !== 'floating' && variant !== 'transparent-floating',
+      fixed: variant === 'floating' || variant === 'transparent-floating',
+      relative: !isSticky && variant !== 'floating' && variant !== 'transparent-floating',
+      dark: isDark,
+    },
+  ]}
+  data-aw-sticky-header
+  data-header-variant={variant}
+>
+  <div class="header-bg absolute inset-0 bg-white shadow-sm transition-all duration-300"></div>
+
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6">
+    <div class="flex items-center justify-between py-4">
+      <!-- Logo -->
+      <a href={getHomePermalink()} class="flex items-center gap-2">
+        <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-primary">
+          <Icon name="tabler:home" class="h-6 w-6 text-white" />
+        </div>
+        <div>
+          <span class="header-logo-text block text-2xl font-bold text-gray-900 transition-colors">Casa Perfecta</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center gap-1">
+        <ul class="flex items-center">
+          {
+            links.map(({ text, href, links: subLinks }) => (
+              <li class={subLinks?.length ? 'dropdown group relative' : ''}>
+                {subLinks?.length ? (
+                  <>
+                    <button
+                      type="button"
+                      class="header-nav-link flex items-center gap-1 px-4 py-2 text-gray-700 hover:text-primary font-medium transition-colors"
+                    >
+                      {text}
+                      <Icon name="tabler:chevron-down" class="h-4 w-4 transition-transform group-hover:rotate-180" />
+                    </button>
+                    <ul class="dropdown-menu invisible absolute left-0 top-full z-50 min-w-[220px] rounded-lg bg-white py-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                      {subLinks.map(({ text: text2, href: href2 }) => (
+                        <li>
+                          <a
+                            class:list={[
+                              'block px-5 py-2.5 text-gray-700 transition-colors hover:bg-primary/10 hover:text-primary',
+                              { 'bg-primary/10 text-primary': href2 === currentPath },
+                            ]}
+                            href={href2}
+                          >
+                            {text2}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <a
+                    class:list={[
+                      'header-nav-link px-4 py-2 text-gray-700 hover:text-primary font-medium transition-colors',
+                      { 'text-primary': href === currentPath },
+                    ]}
+                    href={href}
+                  >
+                    {text}
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+
+        <!-- Schedule Visit CTA -->
+        {
+          actions?.length > 0 && (
+            <a
+              href={actions[0].href}
+              class="ml-4 inline-flex items-center gap-2 rounded-lg border-2 border-primary bg-primary px-5 py-2.5 font-semibold text-white transition-all hover:bg-transparent hover:text-primary"
+            >
+              <Icon name="tabler:calendar" class="h-5 w-5" />
+              {actions[0].text || 'Programează vizită'}
+            </a>
+          )
+        }
+
+        <!-- Theme Toggle -->
+        {showToggleTheme && <ToggleTheme iconClass="w-5 h-5 ml-4 text-gray-700 dark:text-gray-300" />}
+      </div>
+
+      <!-- Mobile Toggle -->
+      <div class="flex items-center gap-2 lg:hidden">
+        {showToggleTheme && <ToggleTheme iconClass="w-5 h-5 text-gray-700 dark:text-gray-300" />}
+        <ToggleMenu iconClass="w-6 h-6 header-toggle-icon text-gray-700" />
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="hidden w-full lg:hidden" aria-label="Mobile navigation" id="mobile-menu">
+      <div class="rounded-xl bg-white shadow-xl p-4 mt-2 mb-4">
+        <ul class="flex flex-col">
+          {
+            links.map(({ text, href, links: subLinks }) => (
+              <li class="border-b border-gray-100 last:border-0">
+                {subLinks?.length ? (
+                  <div class="mobile-dropdown">
+                    <button
+                      type="button"
+                      class="flex w-full items-center justify-between px-4 py-3 text-gray-700 hover:text-primary font-medium"
+                    >
+                      {text}
+                      <Icon name="tabler:chevron-down" class="h-5 w-5 transition-transform" />
+                    </button>
+                    <ul class="hidden bg-gray-50 rounded-lg mx-2 mb-2">
+                      {subLinks.map(({ text: text2, href: href2 }) => (
+                        <li>
+                          <a class="block px-4 py-2.5 text-gray-600 hover:text-primary" href={href2}>
+                            {text2}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <a
+                    class:list={[
+                      'block px-4 py-3 text-gray-700 hover:text-primary font-medium',
+                      { 'text-primary': href === currentPath },
+                    ]}
+                    href={href}
+                  >
+                    {text}
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+
+        <!-- Mobile CTA -->
+        {
+          actions?.length > 0 && (
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <a
+                href={actions[0].href}
+                class="flex items-center justify-center gap-2 w-full rounded-lg bg-primary py-3 font-semibold text-white"
+              >
+                <Icon name="tabler:calendar" class="h-5 w-5" />
+                {actions[0].text || 'Programează vizită'}
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function setupHeader() {
+    const header = document.getElementById('header');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    // NOTE: Mobile menu toggle is handled by BasicScripts.astro via [data-aw-toggle-menu]
+    // Do NOT add duplicate toggle here - it causes double toggle cancellation
+
+    // Mobile dropdown toggles
+    const dropdownBtns = mobileMenu?.querySelectorAll('.mobile-dropdown > button');
+    dropdownBtns?.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const menu = btn.nextElementSibling;
+        menu?.classList.toggle('hidden');
+        const icon = btn.querySelector('svg');
+        icon?.classList.toggle('rotate-180');
+      });
+    });
+
+    // Scroll detection for transparent/floating variants
+    if (header) {
+      const variant = header.dataset.headerVariant;
+      const needsScrollDetection = ['transparent', 'transparent-floating', 'glass'].includes(variant || '');
+
+      if (needsScrollDetection) {
+        const handleScroll = () => {
+          if (window.scrollY > 50) {
+            header.classList.add('scroll');
+          } else {
+            header.classList.remove('scroll');
+          }
+        };
+
+        // Initial check
+        handleScroll();
+
+        // Add scroll listener
+        window.addEventListener('scroll', handleScroll, { passive: true });
+      }
+    }
+  }
+
+  setupHeader();
+  document.addEventListener('astro:after-swap', setupHeader);
+</script>
+
+<style>
+  /* TW4: Pure CSS - no @apply needed */
+  .dropdown:hover .dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>

@@ -1,0 +1,143 @@
+---
+/**
+ * Announcement Bar with Marquee Animation
+ * Similar to plasturifototerapeutici.ro style
+ * Displays scrolling promotional text
+ */
+import { Icon } from 'astro-icon/components';
+import siteSettings from '~/data/settings/site.json';
+
+interface Props {
+  messages?: string[];
+  speed?: 'slow' | 'normal' | 'fast';
+  bgColor?: 'primary' | 'secondary' | 'dark';
+}
+
+const {
+  messages = [
+    '🌟 Programează o consultație gratuită!',
+    '💆 Reducere 20% la prima ședință de Terapie Bowen',
+    '📚 Curs Access Bars - Înscrieri deschise!',
+    '🎁 Pachet 5 ședințe = plătești doar 4',
+    '📞 Sună acum: ' + (siteSettings.contact?.phone || '0774 512 905'),
+  ],
+  speed = 'normal',
+  bgColor = 'primary',
+} = Astro.props;
+
+const speedMap = {
+  slow: '60s',
+  normal: '40s',
+  fast: '25s',
+};
+
+const bgColorMap = {
+  primary: 'bg-primary text-secondary',
+  secondary: 'bg-secondary text-white',
+  dark: 'bg-slate-900 text-white',
+};
+
+// Duplicate messages for seamless loop
+const duplicatedMessages = [...messages, ...messages];
+---
+
+<div class={`announcement-bar ${bgColorMap[bgColor]} py-2 overflow-hidden relative`}>
+  <div class="marquee-container">
+    <div class="marquee-content flex items-center gap-8" style={`animation-duration: ${speedMap[speed]};`}>
+      {
+        duplicatedMessages.map((message, index) => (
+          <span class="marquee-item flex items-center gap-3 whitespace-nowrap text-sm font-medium">
+            {message}
+            {index < duplicatedMessages.length - 1 && <span class="separator opacity-50">•</span>}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Close button (optional) -->
+  <button
+    class="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-70 hover:opacity-100 transition-opacity hidden md:block"
+    aria-label="Închide anunțul"
+    onclick="this.closest('.announcement-bar').style.display='none'"
+  >
+    <Icon name="tabler:x" class="w-4 h-4" />
+  </button>
+</div>
+
+<style>
+  .marquee-container {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .marquee-content {
+    display: flex;
+    animation: marquee linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Pause animation on hover */
+  .announcement-bar:hover .marquee-content {
+    animation-play-state: paused;
+  }
+
+  /* Fade edges for smooth transition */
+  .announcement-bar::before,
+  .announcement-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .announcement-bar.bg-primary::before {
+    left: 0;
+    background: linear-gradient(to right, var(--aw-color-primary), transparent);
+  }
+
+  .announcement-bar.bg-primary::after {
+    right: 0;
+    background: linear-gradient(to left, var(--aw-color-primary), transparent);
+  }
+
+  .announcement-bar.bg-secondary::before {
+    left: 0;
+    background: linear-gradient(to right, var(--aw-color-secondary), transparent);
+  }
+
+  .announcement-bar.bg-secondary::after {
+    right: 0;
+    background: linear-gradient(to left, var(--aw-color-secondary), transparent);
+  }
+
+  .announcement-bar.bg-slate-900::before {
+    left: 0;
+    background: linear-gradient(to right, rgb(15 23 42), transparent); /* slate-900 */
+  }
+
+  .announcement-bar.bg-slate-900::after {
+    right: 0;
+    background: linear-gradient(to left, rgb(15 23 42), transparent); /* slate-900 */
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .marquee-item {
+      font-size: 0.813rem;
+    }
+  }
+</style>
