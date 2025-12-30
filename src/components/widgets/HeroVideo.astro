@@ -38,8 +38,8 @@ const heightClasses = {
     <video autoplay muted loop playsinline poster={videoPoster} class="absolute inset-0 w-full h-full object-cover">
       <source src={videoSrc} type="video/mp4" />
     </video>
-    <!-- Overlay gradient pentru lizibilitate mai buna -->
-    <div class="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/80 to-secondary/60"></div>
+    <!-- Overlay gradient: scoped styles cu CSS variables -->
+    <div class="hero-overlay absolute inset-0"></div>
   </div>
 
   <!-- Content - stil plasturi: fără container, text stânga -->
@@ -82,3 +82,25 @@ const heightClasses = {
     </a>
   </div>
 </section>
+
+<style>
+  /*
+   * Hero Overlay Gradient - Scoped Styles
+   * Pattern: CSS custom properties pentru consistență temă
+   * Compatible cu Tailwind CSS 4 (color-mix) și legacy (rgb components)
+   * Gradient combinat: orizontal (text readability) + vertical (scroll area)
+   */
+  .hero-overlay {
+    background:
+      /* Orizontal: închis stânga (text) → deschis dreapta (imagine) */
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-secondary) 85%, transparent) 0%,
+        color-mix(in srgb, var(--color-secondary) 50%, transparent) 40%,
+        color-mix(in srgb, var(--color-secondary) 15%, transparent) 70%,
+        transparent 100%
+      ),
+      /* Vertical: subtil mai închis jos pentru scroll indicator */
+        linear-gradient(to top, color-mix(in srgb, var(--color-secondary) 40%, transparent) 0%, transparent 30%);
+  }
+</style>

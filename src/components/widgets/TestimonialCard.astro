@@ -21,7 +21,7 @@ const { name, body, rating = 5, youtubeId, profession, location } = Astro.props;
 ---
 
 <div
-  class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-[0_8px_40px_rgba(243,85,37,0.12)] hover:-translate-y-1 border border-transparent hover:border-primary/10 transition-all duration-300 overflow-hidden h-full flex flex-col group"
+  class="testimonial-card-wrapper bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:-translate-y-1 border border-transparent hover:border-primary/10 transition-all duration-300 overflow-hidden h-full flex flex-col group"
 >
   {/* Video testimonial - folosește pachetul oficial Astro */}
   {
@@ -110,3 +110,10 @@ const { name, body, rating = 5, youtubeId, profession, location } = Astro.props;
     </div>
   </div>
 </div>
+
+<style>
+  /* Hover shadow folosește culoarea primară din temă */
+  .testimonial-card-wrapper:hover {
+    box-shadow: 0 8px 40px color-mix(in srgb, var(--aw-color-primary) 12%, transparent);
+  }
+</style>

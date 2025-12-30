@@ -1,4 +1,11 @@
 ---
+/**
+ * CallToAction - Secțiune CTA cu box stilizat
+ *
+ * CSS Variables disponibile (override în app.css):
+ *   --cta-bg, --cta-border-color, --cta-border-radius
+ *   --cta-shadow, --cta-padding, --cta-padding-md
+ */
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { CallToAction, Widget } from '~/types';
 import Headline from '~/components/ui/Headline.astro';
@@ -26,9 +33,7 @@ const {
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  <div
-    class="max-w-3xl mx-auto text-center p-8 md:p-10 rounded-2xl bg-white/5 backdrop-blur-sm border border-primary/20 shadow-[0_0_50px_rgba(243,85,37,0.15)] dark:border-primary/30"
-  >
+  <div class="cta-box max-w-3xl mx-auto text-center backdrop-blur-sm dark:border-primary/30">
     <Headline
       title={title}
       subtitle={subtitle}
@@ -56,3 +61,19 @@ const {
     }
   </div>
 </WidgetWrapper>
+
+<style>
+  .cta-box {
+    padding: var(--cta-padding, 2rem);
+    border-radius: var(--cta-border-radius, 1rem);
+    background: var(--cta-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--cta-border-color, color-mix(in srgb, var(--color-primary, #5b03e4) 20%, transparent));
+    box-shadow: var(--cta-shadow, 0 0 50px color-mix(in srgb, var(--color-primary, #5b03e4) 15%, transparent));
+  }
+
+  @media (min-width: 768px) {
+    .cta-box {
+      padding: var(--cta-padding-md, 2.5rem);
+    }
+  }
+</style>

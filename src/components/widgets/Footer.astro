@@ -1,4 +1,11 @@
 ---
+/**
+ * Footer - Subsol site cu link-uri și social
+ *
+ * CSS Variables disponibile (override în app.css):
+ *   --footer-padding-y, --footer-padding-y-md
+ *   --footer-border-color, --footer-text-color, --footer-link-hover
+ */
 import { Icon } from 'astro-icon/components';
 import { SITE } from 'astrowind:config';
 import { getHomePermalink } from '~/utils/permalinks';
@@ -26,15 +33,15 @@ export interface Props {
 const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme = 'light' } = Astro.props;
 ---
 
-<footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
+<footer class:list={[{ dark: theme === 'dark' }, 'footer-wrapper relative not-prose']}>
   <div class="dark:bg-dark absolute inset-0 pointer-events-none" aria-hidden="true"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-slate-300">
-    <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
+  <div class="footer-container relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-slate-300">
+    <div class="footer-grid grid grid-cols-12 gap-4 gap-y-8 sm:gap-8">
       <div class="col-span-12 lg:col-span-4">
         <div class="mb-2">
-          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{SITE?.name}</a>
+          <a class="inline-block font-bold text-xl dark:text-white" href={getHomePermalink()}>{SITE?.name}</a>
         </div>
-        <div class="text-sm text-muted flex gap-1">
+        <div class="text-sm text-muted dark:text-gray-400 flex gap-1">
           {
             secondaryLinks.map(({ text, href }, index) => (
               <>
@@ -94,9 +101,44 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         )
       }
 
-      <div class="text-sm mr-4 dark:text-muted">
+      <div class="footer-note text-sm mr-4 dark:text-muted">
         <Fragment set:html={footNote} />
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-wrapper {
+    border-top: 1px solid var(--footer-border-color, var(--color-border, #e5e7eb));
+  }
+
+  .dark .footer-wrapper {
+    border-color: var(--footer-border-color, #1e293b);
+  }
+
+  .footer-grid {
+    padding-top: var(--footer-padding-y, 2rem);
+    padding-bottom: var(--footer-padding-y, 2rem);
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      padding-top: var(--footer-padding-y-md, 3rem);
+      padding-bottom: var(--footer-padding-y-md, 3rem);
+    }
+  }
+
+  .footer-wrapper a {
+    color: var(--footer-text-color, var(--color-text-muted, #6b7280));
+    transition: color 0.15s ease;
+  }
+
+  .footer-wrapper a:hover {
+    color: var(--footer-link-hover, var(--color-primary, #5b03e4));
+  }
+
+  .footer-note {
+    color: var(--footer-text-color, var(--color-text-muted, #6b7280));
+  }
+</style>

@@ -1,0 +1,331 @@
+---
+/**
+ * CookieConsent.astro - GDPR Cookie Consent
+ *
+ * Bazat pe implementarea SitePlus (mai robustă)
+ * Foloseste: vanilla-cookieconsent v3.1.0 (ES Module)
+ * Compatibil: GTM Consent Mode v2
+ * Limba: Romana
+ *
+ * INSTALARE:
+ *   npm install vanilla-cookieconsent
+ *
+ * UTILIZARE in Layout.astro:
+ *   import CookieConsent from '~/components/common/CookieConsent.astro';
+ *   <CookieConsent />  <!-- inainte de </body> -->
+ *
+ * CONFIGURARE GA ID (in ordinea prioritatii):
+ *   1. Prop direct: <CookieConsent gaId="G-XXXXXXXX" />
+ *   2. site.json: googleAnalyticsId (editabil din Pages CMS)
+ *   3. config.yaml: analytics.vendors.googleAnalytics.id
+ */
+
+// CSS importat din npm (bundlat de Vite) - elimina render blocking CDN
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
+
+interface Props {
+  gaId?: string;
+}
+
+const { gaId } = Astro.props;
+
+// Incearca sa ia GA ID din mai multe surse (in ordinea prioritatii)
+let analyticsId = gaId;
+
+// 1. Daca nu e prop, incearca site.json (Pages CMS)
+if (!analyticsId) {
+  try {
+    const siteSettings = await import('~/data/settings/site.json');
+    // Structura Terapii Energetice: googleAnalyticsId direct
+    // Structura SitePlus: analytics.googleAnalyticsId
+    const settings = siteSettings.default as Record<string, unknown>;
+    analyticsId =
+      (settings?.googleAnalyticsId as string) ||
+      ((settings?.analytics as Record<string, unknown>)?.googleAnalyticsId as string) ||
+      '';
+  } catch {
+    // site.json nu exista sau nu are analytics
+  }
+}
+
+// 2. Daca nici site.json, incearca config.yaml (AstroWind)
+if (!analyticsId) {
+  try {
+    const { ANALYTICS } = await import('astrowind:config');
+    analyticsId = ANALYTICS?.vendors?.googleAnalytics?.id || '';
+  } catch {
+    analyticsId = '';
+  }
+}
+---
+
+<!-- GTM Consent Mode v2 - DEFAULT DENIED (trebuie INAINTE de orice script Google) -->
+<script is:inline define:vars={{ analyticsId }}>
+  /* eslint-disable prefer-rest-params */
+  window.dataLayer = window.dataLayer || [];
+  // IMPORTANT: Foloseste 'arguments' NU rest params - asta e pattern-ul oficial Google
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  // Expune gtag global pentru utilizare din alte scripturi
+  window.gtag = gtag;
+
+  // Verifica daca userul a acceptat deja analytics (cookie salvat de vanilla-cookieconsent)
+  // Aceasta rezolva problema de timing - Google vede consent-ul corect de la inceput
+  /* eslint-disable no-var, @typescript-eslint/no-unused-vars */
+  var hasAnalyticsConsent = false;
+  try {
+    var ccCookie = document.cookie.match(/cc_cookie=([^;]+)/);
+    if (ccCookie) {
+      var cookieData = JSON.parse(decodeURIComponent(ccCookie[1]));
+      // vanilla-cookieconsent v3 stocheaza categoriile in 'categories' array
+      hasAnalyticsConsent = cookieData.categories && cookieData.categories.indexOf('analytics') !== -1;
+    }
+  } catch (_e) {
+    // Cookie nu exista sau e invalid - ramanem pe denied
+  }
+  /* eslint-enable no-var, @typescript-eslint/no-unused-vars */
+
+  // Default: foloseste consent-ul salvat sau denied pentru vizitatori noi
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: hasAnalyticsConsent ? 'granted' : 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500,
+    // Recomandat Google pentru Consent Mode v2
+    url_passthrough: true,
+    ads_data_redaction: true,
+  });
+
+  // Debug: log consent state in development
+  if (window.location.hostname === 'localhost') {
+    console.log('[CookieConsent] Initial state:', {
+      hasAnalyticsConsent: hasAnalyticsConsent,
+      ccCookie: ccCookie ? 'exists' : 'none',
+    });
+  }
+
+  // Salvam GA ID pentru utilizare ulterioara
+  window.__GA_ID__ = analyticsId || '';
+</script>
+
+<!--
+  GA4 Script - INCARCAT MEREU (recomandat Google pentru Consent Mode v2)
+  Cu consent denied, GA nu trimite date pana cand user-ul accepta.
+  Aceasta e abordarea oficiala Google pentru Tag Assistant detection.
+-->{
+  analyticsId && (
+    <script
+      is:inline
+      define:vars={{ analyticsId }}
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
+    />
+  )
+}
+<script is:inline define:vars={{ analyticsId }}>
+  if (analyticsId) {
+    window.gtag('js', new Date());
+    window.gtag('config', analyticsId, {
+      anonymize_ip: true,
+      // Cu consent denied, GA nu trimite hit-uri pana la consent granted
+    });
+  }
+</script>
+
+<!-- Cookie Consent Script -->
+<script>
+  import * as CookieConsent from 'vanilla-cookieconsent';
+
+  // Helper: verifica daca categoria e acceptata
+  const isAccepted = (category: string): boolean => {
+    return CookieConsent.acceptedCategory(category);
+  };
+
+  // Helper: update GTM Consent Mode
+  const updateGtmConsent = () => {
+    const analytics = isAccepted('analytics');
+
+    if (typeof window.gtag === 'function') {
+      // Include toate valorile explicit (recomandat de Codex Max review)
+      window.gtag('consent', 'update', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: analytics ? 'granted' : 'denied',
+      });
+    }
+
+    // Incarca GA doar dupa consent analytics
+    if (analytics && window.__GA_ID__ && !window.__GA_LOADED__) {
+      loadGoogleAnalytics(window.__GA_ID__);
+    }
+  };
+
+  // Helper: incarca GA4 dinamic
+  const loadGoogleAnalytics = (gaId: string) => {
+    if (!gaId || window.__GA_LOADED__) return;
+
+    const script = document.createElement('script');
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+    script.async = true;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      window.gtag('js', new Date());
+      window.gtag('config', gaId, {
+        anonymize_ip: true,
+      });
+      window.__GA_LOADED__ = true;
+    };
+  };
+
+  // Initializare Cookie Consent
+  CookieConsent.run({
+    // UI Options
+    guiOptions: {
+      consentModal: {
+        layout: 'box',
+        position: 'bottom right',
+        equalWeightButtons: true,
+        flipButtons: false,
+      },
+      preferencesModal: {
+        layout: 'box',
+        position: 'right',
+        equalWeightButtons: true,
+        flipButtons: false,
+      },
+    },
+
+    // Categorii cookies (doar necessary si analytics pentru site de terapii)
+    categories: {
+      necessary: {
+        enabled: true,
+        readOnly: true,
+      },
+      analytics: {
+        enabled: false,
+        readOnly: false,
+        autoClear: {
+          cookies: [{ name: /^_ga/ }, { name: '_gid' }],
+        },
+      },
+    },
+
+    // Limba romana
+    language: {
+      default: 'ro',
+      translations: {
+        ro: {
+          consentModal: {
+            title: 'Folosim cookies',
+            description:
+              'Acest site folosește cookies pentru a analiza traficul și a îmbunătăți experiența. Poți alege să accepți sau să refuzi cookie-urile analitice.',
+            acceptAllBtn: 'Acceptă toate',
+            acceptNecessaryBtn: 'Doar necesare',
+            showPreferencesBtn: 'Setări',
+            footer: '<a href="/privacy">Politica de confidențialitate</a> | <a href="/terms">Termeni și condiții</a>',
+          },
+          preferencesModal: {
+            title: 'Preferințe cookies',
+            acceptAllBtn: 'Acceptă toate',
+            acceptNecessaryBtn: 'Doar necesare',
+            savePreferencesBtn: 'Salvează preferințele',
+            closeIconLabel: 'Închide',
+            serviceCounterLabel: 'Servicii',
+            sections: [
+              {
+                title: 'Utilizarea cookie-urilor',
+                description:
+                  'Folosim cookies pentru a asigura funcționalitățile de bază ale site-ului și pentru a analiza traficul. Poți alege pentru fiecare categorie dacă vrei să permiți sau nu.',
+              },
+              {
+                title: 'Cookies strict necesare',
+                description: 'Aceste cookies sunt esențiale pentru funcționarea site-ului și nu pot fi dezactivate.',
+                linkedCategory: 'necessary',
+              },
+              {
+                title: 'Cookies analitice',
+                description:
+                  'Ne ajută să înțelegem cum este utilizat site-ul, permițându-ne să îmbunătățim experiența utilizatorilor.',
+                linkedCategory: 'analytics',
+              },
+              {
+                title: 'Mai multe informații',
+                description:
+                  'Pentru întrebări despre politica noastră de cookies, <a href="/contact">contactează-ne</a>.',
+              },
+            ],
+          },
+        },
+      },
+    },
+
+    // Event handlers
+    onFirstConsent: () => {
+      updateGtmConsent();
+    },
+
+    onConsent: () => {
+      updateGtmConsent();
+    },
+
+    onChange: () => {
+      updateGtmConsent();
+    },
+  });
+
+  // Expune functie globala pentru "Setari cookie" din footer
+  window.openCookieSettings = () => {
+    CookieConsent.showPreferences();
+  };
+</script>
+
+<!-- TypeScript declarations -->
+<script>
+  declare global {
+    interface Window {
+      __GA_ID__: string;
+      __GA_LOADED__: boolean;
+      gtag: (...args: (string | Date | Record<string, unknown>)[]) => void;
+      dataLayer: (string | Date | Record<string, unknown>)[][];
+      openCookieSettings: () => void;
+    }
+  }
+</script>
+
+<style is:global>
+  /* Cookie Consent - foloseste variabile din tema (CustomStyles.astro) */
+  :root {
+    --cc-bg: #fff;
+    --cc-text: var(--aw-color-secondary);
+    --cc-btn-primary-bg: var(--aw-color-primary);
+    --cc-btn-primary-text: var(--aw-color-secondary);
+    --cc-btn-primary-hover-bg: var(--aw-color-primary-dark);
+    --cc-btn-secondary-bg: #f7fafc;
+    --cc-btn-secondary-text: var(--aw-color-secondary);
+    --cc-btn-secondary-hover-bg: #edf2f7;
+    --cc-toggle-bg-off: #919ea6;
+    --cc-toggle-bg-on: var(--aw-color-primary);
+    --cc-cookie-category-block-bg: #f7fafc;
+    --cc-cookie-category-block-bg-hover: #edf2f7;
+  }
+
+  .dark {
+    --cc-bg: var(--aw-color-secondary);
+    --cc-text: #f7fafc;
+    --cc-btn-primary-bg: var(--aw-color-primary);
+    --cc-btn-primary-text: var(--aw-color-secondary);
+    --cc-btn-secondary-bg: var(--aw-color-secondary-light);
+    --cc-btn-secondary-text: #f7fafc;
+    --cc-btn-secondary-hover-bg: rgb(70 69 90);
+    --cc-toggle-bg-off: #4a5568;
+    --cc-toggle-bg-on: var(--aw-color-primary);
+    --cc-cookie-category-block-bg: var(--aw-color-secondary-light);
+    --cc-cookie-category-block-bg-hover: rgb(70 69 90);
+  }
+</style>
