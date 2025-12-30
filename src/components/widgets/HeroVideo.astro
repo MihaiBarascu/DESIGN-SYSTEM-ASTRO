@@ -7,19 +7,23 @@ export interface Props {
   title?: string;
   subtitle?: string;
   tagline?: string;
-  videoSrc: string;
+  videoSrc?: string;
   videoPoster?: string;
   actions?: CallToAction[];
   height?: 'full' | 'screen' | 'large' | 'medium';
 }
+
+// Default paths - fallback dacă nu sunt specificate în CMS/JSON
+const DEFAULT_VIDEO = '/videos/hero-video.mp4';
+const DEFAULT_POSTER = '/videos/hero-poster.jpg';
 
 const {
   id,
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
   tagline = await Astro.slots.render('tagline'),
-  videoSrc,
-  videoPoster,
+  videoSrc = DEFAULT_VIDEO,
+  videoPoster = DEFAULT_POSTER,
   actions = [],
   height = 'screen',
 } = Astro.props;
